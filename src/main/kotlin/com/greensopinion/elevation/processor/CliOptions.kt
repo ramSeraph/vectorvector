@@ -14,7 +14,7 @@ class CliOptions {
     @Option(names = ["-minY"])
     var minY: Int = 1401
     @Option(names = ["-maxZ"])
-    var maxZ: Int = 12
+    var maxZ: Int = 13
     @Option(names = ["-maxX"])
     var maxX: Int = 646
     @Option(names = ["-maxY"])
