@@ -16,7 +16,7 @@ class TileRangeTest {
     fun `provides a tile range for zoom level 1`() {
         val range = TileRange(minZ = 1, maxZ = 1, minX = 0, maxX = 1, minY = 0, maxY = 1)
         val tiles = range.tiles().toList()
-        assertThat(tiles).containsExactly(
+        assertThat(tiles).containsExactlyInAnyOrder(
             TileId(z=1, x=0, y=0),
             TileId(z=1, x=1, y=0),
             TileId(z=1, x=0, y=1),
@@ -28,7 +28,7 @@ class TileRangeTest {
     fun `provides a tile range for zoom level 1-2`() {
         val range = TileRange(minZ = 1, maxZ = 2, minX = 0, maxX = 1, minY = 0, maxY = 1)
         val tiles = range.tiles().toList()
-        assertThat(tiles).containsExactly(
+        assertThat(tiles).containsExactlyInAnyOrder(
             TileId(z=1, x=0, y=0),
             TileId(z=1, x=1, y=0),
             TileId(z=1, x=0, y=1),
@@ -48,6 +48,32 @@ class TileRangeTest {
             TileId(z=2, x=0, y=3),
             TileId(z=2, x=1, y=3),
             TileId(z=2, x=2, y=3),
+            TileId(z=2, x=3, y=3)
+        )
+    } @Test
+    fun `provides a tile range in depth-first order`() {
+        val range = TileRange(minZ = 1, maxZ = 2, minX = 0, maxX = 1, minY = 0, maxY = 1)
+        val tiles = range.tiles().toList()
+        assertThat(tiles).containsExactly(
+            TileId(z=1, x=0, y=0),
+            TileId(z=2, x=0, y=0),
+            TileId(z=2, x=0, y=1),
+            TileId(z=2, x=1, y=0),
+            TileId(z=2, x=1, y=1),
+            TileId(z=1, x=1, y=0),
+            TileId(z=2, x=2, y=0),
+            TileId(z=2, x=2, y=1),
+            TileId(z=2, x=3, y=0),
+            TileId(z=2, x=3, y=1),
+            TileId(z=1, x=0, y=1),
+            TileId(z=2, x=0, y=2),
+            TileId(z=2, x=0, y=3),
+            TileId(z=2, x=1, y=2),
+            TileId(z=2, x=1, y=3),
+            TileId(z=1, x=1, y=1),
+            TileId(z=2, x=2, y=2),
+            TileId(z=2, x=2, y=3),
+            TileId(z=2, x=3, y=2),
             TileId(z=2, x=3, y=3)
         )
     }

@@ -21,29 +21,22 @@ class TileRange(
 
     fun tiles(): Sequence<TileId> {
         return sequence {
-            for (range in ranges()) {
-                for (y in IntRange(range.minY, range.maxY)) {
-                    for (x in IntRange(range.minX, range.maxX)) {
-                        yield(TileId(z = range.minZ, x = x, y = y))
+            for (y in IntRange(minY, maxY)) {
+                for (x in IntRange(minX, maxX)) {
+                    for (z in IntRange(minZ, maxZ)) {
+                        val scalingFactor = 1 shl (z - minZ)
+                        val innerMinX = x * scalingFactor
+                        val innerMinY = y * scalingFactor
+                        val innerMaxX = (x + 1) * scalingFactor - 1
+                        val innerMaxY = (y + 1) * scalingFactor - 1
+                        for (innerX in innerMinX..innerMaxX) {
+                            for (innerY in innerMinY..innerMaxY) {
+                                println("yeilding $z $innerX $innerY")
+                                yield(TileId(z, innerX, innerY))
+                            }
+                        }
                     }
                 }
-            }
-        }
-    }
-
-    private fun ranges(): Sequence<TileRange> {
-        return sequence {
-            for (z in IntRange(minZ, maxZ)) {
-                val scalingFactor = 1 shl (z - minZ)
-                yield(
-                    TileRange(
-                        minX = minX * scalingFactor,
-                        maxX = (maxX + 1) * scalingFactor - 1,
-                        minY = minY * scalingFactor,
-                        maxY = (maxY + 1) * scalingFactor - 1,
-                        minZ = z, maxZ = z
-                    )
-                )
             }
         }
     }
