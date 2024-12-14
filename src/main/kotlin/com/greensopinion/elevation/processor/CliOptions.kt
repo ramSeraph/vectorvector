@@ -7,16 +7,19 @@ class CliOptions {
     @Option(names = ["-d", "--data"], required = true, description = ["The data directory containing elevation data in tiff format."])
     var dataDir: File? = null
 
+    @Option(names = ["-o", "--output"], required = true, description = ["The directory containing output files."])
+    var outputDir: File? = null
+
     @Option(names = ["-minZ"])
-    var minZ: Int = 12
+    var minZ: Int = 11
     @Option(names = ["-minX"])
-    var minX: Int = 646
+    var minX: Int = 324
     @Option(names = ["-minY"])
-    var minY: Int = 1401
+    var minY: Int = 700
     @Option(names = ["-maxZ"])
-    var maxZ: Int = 13
+    var maxZ: Int = 11
     @Option(names = ["-maxX"])
-    var maxX: Int = 646
+    var maxX: Int = 324
     @Option(names = ["-maxY"])
-    var maxY: Int = 1401
+    var maxY: Int = 700
 }

@@ -31,7 +31,6 @@ class TileRange(
                         val innerMaxY = (y + 1) * scalingFactor - 1
                         for (innerX in innerMinX..innerMaxX) {
                             for (innerY in innerMinY..innerMaxY) {
-                                println("yeilding $z $innerX $innerY")
                                 yield(TileId(z, innerX, innerY))
                             }
                         }
