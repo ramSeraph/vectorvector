@@ -20,18 +20,18 @@ class TerrariumSink(
     private val log: KLogger = KotlinLogging.logger {}
 ) : TileSink {
     override fun accept(tile: Tile) {
-        val file = File(outputFolder, "${tile.id.z}/${tile.id.x}/${tile.id.y}.png")
         val elevationTile = elevationDataStore.get(tile.id)
         if (elevationTile.empty) {
             return
         }
-        file.parentFile.mkdirs()
         val image = BufferedImage(extent, extent, BufferedImage.TYPE_INT_RGB)
         for (x in 0..<extent) {
             for (y in 0..<extent) {
                 image.setRGB(x, y, encodeTerrarium(elevationTile.get(x, y)))
             }
         }
+        val file = File(outputFolder, "${tile.id.z}/${tile.id.x}/${tile.id.y}.png")
+        file.parentFile.mkdirs()
         ImageIO.write(image, "png", file)
         metricsProvider.get().addCount("TerrariumTile")
     }

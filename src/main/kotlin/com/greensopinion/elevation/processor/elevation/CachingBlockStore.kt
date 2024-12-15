@@ -7,7 +7,7 @@ class CachingBlockStore(
     private val delegate: BlockStore,
     private val metricsProvider: MetricsProvider
 ) : BlockStore {
-    private val maxCacheSize: Int = 9
+    private val maxCacheSize: Int = 100
     private val lock = Any()
     private val cache = object : LinkedHashMap<String, ElevationTile>(99, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, ElevationTile>?): Boolean {
