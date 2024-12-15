@@ -11,15 +11,15 @@ class CliOptions {
     var outputDir: File? = null
 
     @Option(names = ["-minZ"])
-    var minZ: Int = 12
+    var minZ: Int = 6
     @Option(names = ["-minX"])
-    var minX: Int = 646
+    var minX: Int = 0
     @Option(names = ["-minY"])
-    var minY: Int = 1401
+    var minY: Int = 0
     @Option(names = ["-maxZ"])
     var maxZ: Int = 12
     @Option(names = ["-maxX"])
-    var maxX: Int = 646
+    var maxX: Int = 63
     @Option(names = ["-maxY"])
-    var maxY: Int = 1401
+    var maxY: Int = 63
 }
