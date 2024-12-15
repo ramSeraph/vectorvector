@@ -22,11 +22,15 @@ class BlockElevationDataStore(
                     isEmpty(tile, Position(0, tileExtent - 1)) &&
                     isEmpty(tile, Position(tileExtent - 1, 0))
         }
+        private var lastBlockId: BlockId? = null
+        private var lastBlock: ElevationTile? = null
 
         override fun get(x: Int, y: Int): Elevation {
             val coordinates = slippyMapTranslator.map(TilePosition(tile, Position(x, y)))
             val blockPosition = blockMapper.map(coordinates)
-            val block = blockStore.load(blockPosition.blockId)
+            val block = if (lastBlockId == blockPosition.blockId) lastBlock!! else blockStore.load(blockPosition.blockId)
+            lastBlock = block
+            lastBlockId = blockPosition.blockId
             return block.get(blockPosition.position.x.roundToInt(), blockPosition.position.y.roundToInt())
         }
 
