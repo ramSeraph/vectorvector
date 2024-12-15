@@ -80,7 +80,6 @@ class BlockMapperElevationIT {
 
     @Nested
     inner class `Tile Corners`() {
-        val translator = SlippyMapTranslator(tileExtent = 256)
         @Test
         fun `tile 11 324 700`() {
             assertElevation(Coordinates(49.38237278700955,  -123.046875), Elevation(578.0))
