@@ -1,9 +1,9 @@
 package com.greensopinion.elevation.processor
 
 @JvmInline
-value class Elevation(val elevation: Double)
+value class Elevation(val meters: Double)
 
-val INVALID_ELEVATION = Elevation(elevation = Double.NEGATIVE_INFINITY)
+val INVALID_ELEVATION = Elevation(meters = Double.NEGATIVE_INFINITY)
 
 interface ElevationTile {
     fun get(x: Int, y: Int): Elevation

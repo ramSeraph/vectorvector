@@ -1,7 +1,6 @@
 package com.greensopinion.elevation.processor
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class TileRangeTest {

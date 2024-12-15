@@ -39,7 +39,7 @@ class TerrariumSink(
         if (elevation == INVALID_ELEVATION) {
             return 0
         }
-        val encodedElevation = (elevation.elevation + 32768.0).toInt()
+        val encodedElevation = (elevation.meters + 32768.0).toInt()
         val red = (encodedElevation shr 8) and 0xFF
         val green = encodedElevation and 0xFF
         val blue = ((encodedElevation - (encodedElevation.toInt())) * 256)

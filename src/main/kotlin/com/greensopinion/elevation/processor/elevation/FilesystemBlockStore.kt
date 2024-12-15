@@ -21,7 +21,6 @@ class FilesystemBlockStore(
     }
 
     private fun load(file: File): ElevationTile {
-        log.info { "reading $file" }
         val readers = ImageIO.getImageReadersByFormatName("TIFF")
         require(readers.hasNext()) { "No TIFF readers!"}
         val reader = readers.next() as ImageReader
@@ -32,7 +31,10 @@ class FilesystemBlockStore(
             return object : ElevationTile {
                 override fun get(x: Int, y: Int): Elevation {
                     val sample = raster.getSample(x,y,0)
-                    return Elevation(elevation = sample.toDouble())
+                    if (sample == -32768) {
+                        return Elevation(meters = 0.0)
+                    }
+                    return Elevation(meters = sample.toDouble())
                 }
             }
         }

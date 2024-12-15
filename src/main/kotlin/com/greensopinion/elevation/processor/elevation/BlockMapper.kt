@@ -27,7 +27,7 @@ class BlockMapper(
         )
         val offset = Offset(
             x = (coordinates.longitude - min.longitude) / pixelSize.degrees,
-            y = (coordinates.latitude - min.latitude) / pixelSize.degrees
+            y = (max.latitude - coordinates.latitude) / pixelSize.degrees
         )
         return BlockOffset(block, offset)
     }
