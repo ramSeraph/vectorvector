@@ -3,7 +3,6 @@ package com.greensopinion.elevation.processor.elevation
 import com.greensopinion.elevation.processor.Elevation
 import com.greensopinion.elevation.processor.ElevationTile
 import com.greensopinion.elevation.processor.EmptyTile
-import com.greensopinion.elevation.processor.INVALID_ELEVATION
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
@@ -42,6 +41,23 @@ class FilesystemBlockStore(
                     return Elevation(meters = sample.toDouble())
                 }
             }
+        }
+    }
+
+    fun validateAll() {
+        val files = folder.listFiles() ?: throw IllegalArgumentException("Data folder does not exist: $folder")
+        val errors = mutableListOf<File>()
+        for (file in files.filter { it.name.endsWith(".tif") }) {
+            try {
+                load(file)
+            } catch (e: Exception) {
+                errors.add(file)
+                log.error(e) { "Cannot load file: $file" }
+            }
+        }
+        if (errors.isNotEmpty()) {
+            log.info { "The following ${errors.size} files could not be loaded: \n${errors.joinToString("\n")}" }
+            throw Exception("${errors.size} files had errors")
         }
     }
 }

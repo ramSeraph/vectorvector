@@ -10,16 +10,19 @@ class CliOptions {
     @Option(names = ["-o", "--output"], required = true, description = ["The directory containing output files."])
     var outputDir: File? = null
 
+    @Option(names=["--validate"],)
+    var validateData: Boolean = false
+
     @Option(names = ["-minZ"])
-    var minZ: Int = 3
+    var minZ: Int = 6
     @Option(names = ["-minX"])
-    var minX: Int = 1
+    var minX: Int = 0
     @Option(names = ["-minY"])
-    var minY: Int = 2
+    var minY: Int = 13
     @Option(names = ["-maxZ"])
     var maxZ: Int = 12
     @Option(names = ["-maxX"])
-    var maxX: Int = 2
+    var maxX: Int = 63
     @Option(names = ["-maxY"])
-    var maxY: Int = 3
+    var maxY: Int = 44
 }

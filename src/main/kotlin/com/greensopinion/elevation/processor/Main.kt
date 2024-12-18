@@ -5,14 +5,21 @@ import com.greensopinion.elevation.processor.metrics.DefaultMetrics
 import com.greensopinion.elevation.processor.metrics.PeriodicMetrics
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import com.greensopinion.elevation.processor.sink.TerrariumSink
+import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
 import java.time.Duration
 
+private val log = KotlinLogging.logger {  }
+
 fun main(args: Array<String>) {
     val options = parseCommandLine(args)
+    if (options.validateData) {
+        validateData(options)
+        return
+    }
     val tileExtent = 256
     val metricsProvider = SingletonMetricsProvider()
-    val periodicMetrics = PeriodicMetrics(
+    PeriodicMetrics(
         interval = Duration.ofSeconds(10),
         metrics = metricsProvider.metrics
     ).use {
@@ -34,6 +41,15 @@ fun main(args: Array<String>) {
             )
         ).process()
     }
+}
+
+private fun validateData(options: CliOptions) {
+    log.info { "Validating data only" }
+    val blockStore = FilesystemBlockStore(
+        folder = options.dataDir!!
+    )
+    blockStore.validateAll()
+    log.info { "Done" }
 }
 
 private fun parseCommandLine(args: Array<String>): CliOptions {
