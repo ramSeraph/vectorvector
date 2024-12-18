@@ -20,7 +20,7 @@ class CachingBlockStore(
             return evict
         }
     }
-    private val loader = Executors.newFixedThreadPool(4) { Thread().also { it.isDaemon = true } }
+    private val loader = Executors.newFixedThreadPool(4) { r -> Thread(r).also { it.isDaemon = true } }
 
     override fun load(blockId: BlockId): ElevationTile {
         val key = "${blockId.x},${blockId.y}"

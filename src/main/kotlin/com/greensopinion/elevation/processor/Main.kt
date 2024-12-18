@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
     val tileExtent = 256
     val metricsProvider = SingletonMetricsProvider()
     PeriodicMetrics(
-        interval = Duration.ofSeconds(10),
+        interval = Duration.ofSeconds(30),
         metrics = metricsProvider.metrics
     ).use {
         Processor(
