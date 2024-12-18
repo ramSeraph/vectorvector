@@ -1,6 +1,7 @@
 package com.greensopinion.elevation.processor.elevation
 
 import com.greensopinion.elevation.processor.*
+import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Nested
@@ -11,9 +12,8 @@ import kotlin.math.roundToInt
 class BlockMapperElevationIT {
     private val mapper = BlockMapper(blockExtent = 6000, blockSize = Degrees(5.0))
     private val store = CachingBlockStore(
-        FilesystemBlockStore(
-            folder = File("../../data/tif")
-        )
+        FilesystemBlockStore(folder = File("../../data/tif")),
+        metricsProvider = SingletonMetricsProvider()
     )
 
     @Nested
@@ -82,8 +82,8 @@ class BlockMapperElevationIT {
     inner class `Tile Corners`() {
         @Test
         fun `tile 11 324 700`() {
-            assertElevation(Coordinates(49.38237278700955,  -123.046875), Elevation(578.0))
-            assertElevation(Coordinates(49.26825260148868,  -123.046875), Elevation(60.0))
+            assertElevation(Coordinates(49.38237278700955, -123.046875), Elevation(578.0))
+            assertElevation(Coordinates(49.26825260148868, -123.046875), Elevation(60.0))
             assertElevation(Coordinates(49.38237278700955, -122.87178039550781), Elevation(0.0))
             assertElevation(Coordinates(49.26825260148868, -122.87178039550781), Elevation(132.0))
         }

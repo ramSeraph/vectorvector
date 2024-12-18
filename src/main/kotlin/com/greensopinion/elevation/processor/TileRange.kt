@@ -19,6 +19,20 @@ class TileRange(
         c.checkY(maxY)
     }
 
+    val size: Int get() {
+        var count = 0
+        val baseRangeX = maxX-minX+1
+        val baseRangeY = maxY-minY+1
+
+        for (z in minZ..maxZ) {
+            val factor = 1 shl (z - minZ)
+            val rangeX = baseRangeX * factor
+            val rangeY = baseRangeY* factor
+            count += (rangeX*rangeY)
+        }
+        return count
+    }
+
     fun tiles(): Sequence<TileId> {
         return sequence {
             for (y in IntRange(minY, maxY)) {

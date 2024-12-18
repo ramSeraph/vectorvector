@@ -76,4 +76,15 @@ class TileRangeTest {
             TileId(z=2, x=3, y=3)
         )
     }
+
+    @Test
+    fun `provides a size`() {
+        val range = TileRange(minZ = 1, maxZ = 2, minX = 0, maxX = 1, minY = 0, maxY = 1)
+        assertThat(range.size).isEqualTo(20)
+    }
+    @Test
+    fun `provides a size across a wider range`() {
+        val range = TileRange(minZ = 10, maxZ = 12, minX = 50, maxX = 55, minY = 80, maxY = 85)
+        assertThat(range.size).isEqualTo(756)
+    }
 }

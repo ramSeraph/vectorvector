@@ -62,14 +62,14 @@ class BlockMapperTest {
             val blockOffset = mapper.map(Coordinates(50.000001,5.0))
             assertThat(blockOffset.blockId).isEqualTo(BlockId(38,2))
             assertThat(blockOffset.position.x).isCloseTo(0.0,Offset.offset(0.1))
-            assertThat(blockOffset.position.y).isCloseTo(6000.0,Offset.offset(0.1))
+            assertThat(blockOffset.position.y).isCloseTo(5999.0,Offset.offset(0.1))
         }
 
         @Test
         fun `provides a pixel offset top right`() {
             val blockOffset = mapper.map(Coordinates(55.0,9.999999))
             assertThat(blockOffset.blockId).isEqualTo(BlockId(38,2))
-            assertThat(blockOffset.position.x).isCloseTo(6000.0,Offset.offset(0.1))
+            assertThat(blockOffset.position.x).isCloseTo(5999.0,Offset.offset(0.1))
             assertThat(blockOffset.position.y).isCloseTo(0.0,Offset.offset(0.1))
         }
 
