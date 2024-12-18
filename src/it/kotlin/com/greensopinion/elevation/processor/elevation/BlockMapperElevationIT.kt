@@ -1,20 +1,16 @@
 package com.greensopinion.elevation.processor.elevation
 
-import com.greensopinion.elevation.processor.*
-import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
+import com.greensopinion.elevation.processor.Coordinates
+import com.greensopinion.elevation.processor.Elevation
+import com.greensopinion.elevation.processor.INVALID_ELEVATION
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.io.File
 import kotlin.math.roundToInt
 
 class BlockMapperElevationIT {
     private val mapper = BlockMapper(blockExtent = 6000, blockSize = Degrees(5.0))
-    private val store = CachingBlockStore(
-        FilesystemBlockStore(folder = File("../../data/tif")),
-        metricsProvider = SingletonMetricsProvider()
-    )
 
     @Nested
     inner class `Common Locations` {
@@ -92,7 +88,7 @@ class BlockMapperElevationIT {
     private fun assertNoElevation(location: Coordinates) = assertElevation(location, INVALID_ELEVATION)
     private fun assertElevation(location: Coordinates, expected: Elevation) {
         val blockOffset = mapper.map(location)
-        val block = store.load(blockOffset.blockId)
+        val block = testBlockStore.load(blockOffset.blockId)
         val elevation = block.get(blockOffset.position.x.roundToInt(), blockOffset.position.y.roundToInt())
         assertThat(elevation.meters).isCloseTo(expected.meters, Offset.offset(2.0))
     }
