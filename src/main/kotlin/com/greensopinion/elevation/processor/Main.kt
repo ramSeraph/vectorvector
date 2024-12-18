@@ -9,7 +9,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
 import java.time.Duration
 
-private val log = KotlinLogging.logger {  }
+private val log = KotlinLogging.logger { }
 
 fun main(args: Array<String>) {
     val options = parseCommandLine(args)
@@ -31,9 +31,7 @@ fun main(args: Array<String>) {
                     blockSize = Degrees(5.0),
                     blockExtent = 6000,
                     tileExtent = tileExtent,
-                    blockStore = CachingBlockStore(FilesystemBlockStore(
-                        folder = options.dataDir!!
-                    ),metricsProvider)
+                    blockStore = CachingBlockStore(FilesystemBlockStore(folder = options.dataDir!!), metricsProvider)
                 ),
                 extent = tileExtent,
                 outputFolder = options.outputDir!!,
