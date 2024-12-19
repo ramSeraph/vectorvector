@@ -9,15 +9,15 @@ import com.greensopinion.elevation.processor.metrics.MetricsProvider
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.imageio.ImageIO
 
 class TerrariumSink(
     val extent: Int,
-    val outputFolder: File,
+    val repository: TileRepository,
     val elevationDataStore: ElevationDataStore,
-    private val metricsProvider: MetricsProvider,
-    private val log: KLogger = KotlinLogging.logger {}
+    private val metricsProvider: MetricsProvider
 ) : TileSink {
     override fun accept(tile: Tile) :Boolean{
         val elevationTile = elevationDataStore.get(tile.id)
@@ -30,9 +30,10 @@ class TerrariumSink(
                 image.setRGB(x, y, encodeTerrarium(elevationTile.get(x, y)))
             }
         }
-        val file = File(outputFolder, "${tile.id.z}/${tile.id.x}/${tile.id.y}.png")
-        file.parentFile.mkdirs()
-        ImageIO.write(image, "png", file)
+        val extension = "png"
+        val output = ByteArrayOutputStream(initialSize)
+        ImageIO.write(image,extension,output)
+        repository.store(tile.id,extension,output.toByteArray())
         metricsProvider.get().addCount("TerrariumTile")
         return true
     }
@@ -51,3 +52,4 @@ class TerrariumSink(
                 (blue and 0xFF)
     }
 }
+private val initialSize = 1024*150

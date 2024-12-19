@@ -1,0 +1,26 @@
+<project default="generate">
+    <property name="source.folder.kotlin" value="src/main/kotlin"/>
+    <property name="source.folder.java" value="src/main/kotlin"/>
+    <property name="target.package" value="com.greensopinion.elevation.processor.vector.pbf"/>
+    <property name="source.vector.proto" value="https://raw.githubusercontent.com/mapbox/vector-tile-spec/refs/heads/master/2.1/vector_tile.proto"/>
+    <property name="project.build.tmp" value="target/tmp"/>
+    <property name="project.build.tmp.proto" value="target/tmp/vector_tile.proto"/>
+    <property name="protoc.path" value="/opt/homebrew/bin/protoc"/>
+
+    <target name="generate">
+        <mkdir dir="${project.build.tmp}"/>
+        <mkdir dir="${source.folder.java}"/>
+        <mkdir dir="${source.folder.kotlin}"/>
+        <get src="${source.vector.proto}" dest="${project.build.tmp.proto}" />
+        <echo level="info">
+            To get protoc run the following:
+
+            brew install protobuf
+        </echo>
+        <exec executable="${protoc.path}">
+            <arg value="--kotlin_out=${source.folder.kotlin}" />
+            <arg value="--java_out=${source.folder.java}"/>
+            <arg value="${project.build.tmp.proto}"/>
+        </exec>
+    </target>
+</project>
