@@ -9,6 +9,8 @@ interface ElevationTile {
     val empty: Boolean
     val extent: Int
     fun get(x: Int, y: Int): Elevation
+
+    fun materialize(): ElevationTile = if (empty) this else MaterializedTile(this)
 }
 
 class EmptyTile(
@@ -18,7 +20,7 @@ class EmptyTile(
     override fun get(x: Int, y: Int): Elevation = INVALID_ELEVATION
 }
 
-class MaterializedTile(delegate: ElevationTile) : ElevationTile {
+private class MaterializedTile(delegate: ElevationTile) : ElevationTile {
     override val empty = delegate.empty
     override val extent = delegate.extent
     private val data = IntArray(extent*extent)
@@ -30,5 +32,7 @@ class MaterializedTile(delegate: ElevationTile) : ElevationTile {
         }
     }
     override fun get(x: Int, y: Int): Elevation = Elevation(meters = data[x+y*extent])
+
+    override fun materialize(): ElevationTile = this
 }
 
