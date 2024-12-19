@@ -16,27 +16,27 @@ class BlockMapperElevationIT {
     inner class `Common Locations` {
         @Test
         fun `provides elevation for Everest`() {
-            assertElevation(Coordinates(27.989065, 86.925223), Elevation(8_806.0))
+            assertElevation(Coordinates(27.989065, 86.925223), Elevation(8_806))
         }
 
         @Test
         fun `provides elevation for Mount Rainier`() {
-            assertElevation(Coordinates(46.8523212, -121.7606441), Elevation(4_371.0))
+            assertElevation(Coordinates(46.8523212, -121.7606441), Elevation(4_371))
         }
 
         @Test
         fun `provides elevation for Mount Kosciuszko`() {
-            assertElevation(Coordinates(-36.4553792, 148.263399), Elevation(2_220.0))
+            assertElevation(Coordinates(-36.4553792, 148.263399), Elevation(2_220))
         }
 
         @Test
         fun `provides elevation for Aconcagua`() {
-            assertElevation(Coordinates(-32.65256, -70.0108672), Elevation(6_928.0))
+            assertElevation(Coordinates(-32.65256, -70.0108672), Elevation(6_928))
         }
 
         @Test
         fun `provides elevation for Haleakala`() {
-            assertElevation(Coordinates(20.7084082, -156.2558971), Elevation(3_046.0))
+            assertElevation(Coordinates(20.7084082, -156.2558971), Elevation(3_046))
         }
     }
 
@@ -45,18 +45,18 @@ class BlockMapperElevationIT {
 
         @Test
         fun `provides elevation near Seattle and Vancouver`() {
-            assertElevation(Coordinates(48.8153456, -123.3630877), Elevation(0.0))
-            assertElevation(Coordinates(49.300221, -122.939081), Elevation(0.0))
+            assertElevation(Coordinates(48.8153456, -123.3630877), Elevation(0))
+            assertElevation(Coordinates(49.300221, -122.939081), Elevation(0))
         }
 
         @Test
         fun `provides elevation near San Francisco`() {
-            assertElevation(Coordinates(37.842456, -122.406336), Elevation(0.0))
+            assertElevation(Coordinates(37.842456, -122.406336), Elevation(0))
         }
 
         @Test
         fun `provides elevation near Akimiski Island`() {
-            assertElevation(Coordinates(53.433667, -81.338326), Elevation(0.0))
+            assertElevation(Coordinates(53.433667, -81.338326), Elevation(0))
         }
     }
 
@@ -78,10 +78,10 @@ class BlockMapperElevationIT {
     inner class `Tile Corners`() {
         @Test
         fun `tile 11 324 700`() {
-            assertElevation(Coordinates(49.38237278700955, -123.046875), Elevation(578.0))
-            assertElevation(Coordinates(49.26825260148868, -123.046875), Elevation(60.0))
-            assertElevation(Coordinates(49.38237278700955, -122.87178039550781), Elevation(0.0))
-            assertElevation(Coordinates(49.26825260148868, -122.87178039550781), Elevation(132.0))
+            assertElevation(Coordinates(49.38237278700955, -123.046875), Elevation(578))
+            assertElevation(Coordinates(49.26825260148868, -123.046875), Elevation(60))
+            assertElevation(Coordinates(49.38237278700955, -122.87178039550781), Elevation(0))
+            assertElevation(Coordinates(49.26825260148868, -122.87178039550781), Elevation(132))
         }
     }
 
@@ -90,6 +90,6 @@ class BlockMapperElevationIT {
         val blockOffset = mapper.map(location)
         val block = testBlockStore.load(blockOffset.blockId)
         val elevation = block.get(blockOffset.position.x.roundToInt(), blockOffset.position.y.roundToInt())
-        assertThat(elevation.meters).isCloseTo(expected.meters, Offset.offset(2.0))
+        assertThat(elevation.meters).isCloseTo(expected.meters, Offset.offset(2))
     }
 }

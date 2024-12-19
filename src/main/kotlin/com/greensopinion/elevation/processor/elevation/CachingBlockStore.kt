@@ -1,6 +1,7 @@
 package com.greensopinion.elevation.processor.elevation
 
 import com.greensopinion.elevation.processor.ElevationTile
+import com.greensopinion.elevation.processor.MaterializedTile
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
 import java.io.Closeable
 import java.util.concurrent.CompletableFuture
@@ -42,7 +43,7 @@ class CachingBlockStore(
         val future = CompletableFuture<ElevationTile>()
         loader.submit {
             try {
-                future.complete(delegate.load(blockId))
+                future.complete(MaterializedTile(delegate.load(blockId)))
             } catch (e: Throwable) {
                 future.completeExceptionally(e)
             }

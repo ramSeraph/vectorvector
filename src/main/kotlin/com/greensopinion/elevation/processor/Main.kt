@@ -22,12 +22,16 @@ fun main(args: Array<String>) {
         return
     }
     val tileExtent = 256
+    val blockExtent = 6000
     val metricsProvider = SingletonMetricsProvider()
     val dataStore = BlockElevationDataStore(
         blockSize = Degrees(5.0),
-        blockExtent = 6000,
+        blockExtent = blockExtent,
         tileExtent = tileExtent,
-        blockStore = CachingBlockStore(FilesystemBlockStore(folder = options.dataDir!!), metricsProvider)
+        blockStore = CachingBlockStore(
+            FilesystemBlockStore(blockExtent = blockExtent, folder = options.dataDir!!),
+            metricsProvider
+        )
     )
     val repository = FilesystemTileRepository(outputFolder = options.outputDir!!)
     PeriodicMetrics(
@@ -59,6 +63,7 @@ fun main(args: Array<String>) {
 private fun validateData(options: CliOptions) {
     log.info { "Validating data only" }
     val blockStore = FilesystemBlockStore(
+        blockExtent = 6000,
         folder = options.dataDir!!
     )
     blockStore.validateAll()

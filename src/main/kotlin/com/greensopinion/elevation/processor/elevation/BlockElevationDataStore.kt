@@ -16,6 +16,7 @@ class BlockElevationDataStore(
     private val blockMapper = BlockMapper(blockExtent, blockSize)
 
     override fun get(tile: TileId): ElevationTile = object : ElevationTile {
+        override val extent = tileExtent
         override val empty by lazy {
             isEmpty(tile, Position(0, 0)) &&
                     isEmpty(tile, Position(tileExtent - 1, tileExtent - 1)) &&

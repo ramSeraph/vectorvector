@@ -11,12 +11,13 @@ import javax.imageio.ImageReader
 
 
 class FilesystemBlockStore(
+    private val blockExtent: Int,
     private val folder: File,
     private val log: KLogger = KotlinLogging.logger {}
 ) : BlockStore {
     override fun load(blockId: BlockId): ElevationTile {
         val file = File(folder, "srtm_${blockId.x.keyString()}_${blockId.y.keyString()}.tif")
-        return if (file.exists()) load(file) else EmptyTile
+        return if (file.exists()) load(file) else EmptyTile(blockExtent)
     }
 
     private fun load(file: File): ElevationTile {
@@ -29,6 +30,8 @@ class FilesystemBlockStore(
             val raster = reader.readRaster(0, null)
             return object : ElevationTile {
                 override val empty = false
+                override val extent: Int
+                    get() = raster.width
                 override fun get(x: Int, y: Int): Elevation {
                     val sample = try {
                         raster.getSample(x, y, 0)
@@ -36,9 +39,9 @@ class FilesystemBlockStore(
                         throw Exception("invalid coordinates: ${x},${y} in [${raster.width},${raster.height}]")
                     }
                     if (sample == -32768) {
-                        return Elevation(meters = 0.0)
+                        return Elevation(meters = 0)
                     }
-                    return Elevation(meters = sample.toDouble())
+                    return Elevation(meters = sample)
                 }
             }
         }
