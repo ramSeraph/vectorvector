@@ -38,10 +38,16 @@ class Progress(
         val elapsed = Duration.between(start, Instant.now())
         val completed = this.completed.get()
         val processed = this.processed.get()
-        val perSecond = processed.toDouble()/elapsed.toSeconds().toDouble()
         val remaining = total - completed
-        val estimated = Duration.ofSeconds((remaining/perSecond).toLong())
-        log.info { "$completed completed, $remaining remaining. Estimated time remaining: ${estimated.toLogString()}" }
+        val estimation: String
+        if (processed == 0) {
+            estimation = "no tiles processed, cannot estimate"
+        } else {
+            val perSecond = processed.toDouble() / elapsed.toSeconds().toDouble()
+            val estimated = Duration.ofSeconds((remaining / perSecond).toLong())
+            estimation = estimated.toLogString()
+        }
+        log.info { "$completed completed, $remaining remaining. Estimated time remaining: $estimation" }
     }
 }
 

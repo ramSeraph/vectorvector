@@ -26,11 +26,12 @@ class BlockElevationDataStore(
                     isEmpty(tile, Position(0, tileExtent - 1)) &&
                     isEmpty(tile, Position(tileExtent - 1, 0))
         }
-        private val blockIdToBlock = mutableMapOf<BlockId, ElevationTile>()
+        private val blockIdToBlockLocal = ThreadLocal<MutableMap<BlockId, ElevationTile>>()
 
         override fun get(x: Int, y: Int): Elevation {
             val coordinates = slippyMapTranslator.map(TilePosition(tile, Position(x, y)))
             val blockPosition = blockMapper.map(coordinates)
+            val blockIdToBlock = blockIdToBlockLocal.get() ?: UnsafeCache().also { blockIdToBlockLocal.set(it) }
             val block = blockIdToBlock[blockPosition.blockId]
                 ?: blockIdToBlock.computeIfAbsent(blockPosition.blockId) { blockStore.load(blockPosition.blockId) }
             return ElevationInterpolator(block).get(blockPosition.position)
@@ -43,4 +44,12 @@ class BlockElevationDataStore(
             return block.empty
         }
     }
+
+    private class UnsafeCache : LinkedHashMap<BlockId, ElevationTile>(101,0.4f,true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<BlockId, ElevationTile>?): Boolean {
+            return size > maxCacheSize
+        }
+    }
 }
+
+private const val maxCacheSize = 50
