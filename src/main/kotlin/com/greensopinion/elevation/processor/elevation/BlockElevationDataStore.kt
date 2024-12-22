@@ -15,7 +15,7 @@ class BlockElevationDataStore(
     private val slippyMapTranslator = SlippyMapTranslator(tileExtent)
     private val blockMapper = BlockMapper(blockExtent, blockSize)
 
-    override fun get(tile: TileId): ElevationTile = object : ElevationTile {
+    override fun get(tile: TileId): ElevationTile = object : ElevationTile() {
         override val extent = tileExtent
         override val empty by lazy {
             isEmpty(tile, Position(0, 0)) &&

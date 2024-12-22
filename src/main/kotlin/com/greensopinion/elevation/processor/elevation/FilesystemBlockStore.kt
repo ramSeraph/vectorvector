@@ -28,7 +28,7 @@ class FilesystemBlockStore(
         ImageIO.createImageInputStream(file).use { stream ->
             reader.input = stream
             val raster = reader.readRaster(0, null)
-            return object : ElevationTile {
+            return object : ElevationTile() {
                 override val empty = false
                 override val extent: Int
                     get() = raster.width

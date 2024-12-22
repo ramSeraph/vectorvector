@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 class TerrariumTileReader {
     fun read(file: File): ElevationTile {
         val image = ImageIO.read(file)
-        return object : ElevationTile {
+        return object : ElevationTile() {
             override val extent: Int = image.width
             override val empty = false
 
