@@ -6,7 +6,9 @@ import kotlin.math.min
 @JvmInline
 value class Degrees(val degrees: Double)
 
-data class BlockId(val x: Int, val y: Int)
+data class BlockId(val x: Int, val y: Int) {
+    val valid : Boolean get() = x >= 0 && y >= 0
+}
 
 data class Offset(
     val x: Double,

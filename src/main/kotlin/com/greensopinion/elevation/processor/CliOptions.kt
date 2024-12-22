@@ -13,6 +13,12 @@ class CliOptions {
     @Option(names=["--validate"],)
     var validateData: Boolean = false
 
+    @Option(names=["--terrarium"])
+    var terrarium: Boolean = false
+
+    @Option(names=["--vector"])
+    var vector: Boolean = true
+
     @Option(names = ["-minZ"])
     var minZ: Int = 6
     @Option(names = ["-minX"])

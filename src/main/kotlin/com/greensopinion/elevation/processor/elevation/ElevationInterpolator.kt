@@ -10,6 +10,9 @@ class ElevationInterpolator(val tile: ElevationTile) {
         val bottomRight = position.ceil()
 
         val topLeftElevation = tile.get(topLeft.x.toInt(), topLeft.y.toInt())
+        if (!topLeftElevation.valid) {
+            return topLeftElevation
+        }
         val topRightElevation = tile.get(bottomRight.x.toInt(), topLeft.y.toInt())
         val bottomLeftElevation = tile.get(topLeft.x.toInt(), bottomRight.y.toInt())
         val bottomRightElevation = tile.get(bottomRight.x.toInt(), bottomRight.y.toInt())

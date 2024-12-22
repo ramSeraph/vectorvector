@@ -8,8 +8,11 @@ import com.greensopinion.elevation.processor.elevation.FilesystemBlockStore
 import com.greensopinion.elevation.processor.metrics.PeriodicMetrics
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import com.greensopinion.elevation.processor.sink.CompositeTileSink
+import com.greensopinion.elevation.processor.sink.FaultBarrierTileSink
 import com.greensopinion.elevation.processor.sink.FilesystemTileRepository
 import com.greensopinion.elevation.processor.sink.TerrariumSink
+import com.greensopinion.elevation.processor.sink.VectorTileSink
+import com.greensopinion.elevation.processor.sink.contour.ContourOptions
 import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
 import java.time.Duration
@@ -37,6 +40,33 @@ fun main(args: Array<String>) {
         )
     )
     val repository = FilesystemTileRepository(outputFolder = options.outputDir!!)
+    val sinks = mutableListOf<TileSink>()
+    if (options.terrarium) {
+        sinks.add(
+            TerrariumSink(
+                extent = tileExtent,
+                repository = repository,
+                elevationDataStore = dataStore,
+                metricsProvider = metricsProvider
+            )
+        )
+    }
+    if (options.vector) {
+        sinks.add(
+            VectorTileSink(
+                contourOptionsProvider = { tile ->
+                    if (tile.id.z < 12) {
+                        ContourOptions(minorLevel = 200, majorLevel = 1000)
+                    } else
+                        ContourOptions(minorLevel = 20, majorLevel = 100)
+                },
+                repository = repository,
+                elevationDataStore = dataStore,
+                metricsProvider = metricsProvider
+            )
+        )
+    }
+    require(sinks.isNotEmpty()) { "No outputs specified, nothing to do!" }
     PeriodicMetrics(
         interval = Duration.ofSeconds(30),
         metrics = metricsProvider.metrics
@@ -44,21 +74,7 @@ fun main(args: Array<String>) {
         Processor(
             tileRange = options.toTileRange(),
             metricsProvider = metricsProvider,
-            sink = CompositeTileSink(
-                listOf(
-                    TerrariumSink(
-                        extent = tileExtent,
-                        repository = repository,
-                        elevationDataStore = dataStore,
-                        metricsProvider = metricsProvider
-                    ),
-//                    VectorTileSink(
-//                        repository = repository,
-//                        elevationDataStore = dataStore,
-//                        metricsProvider = metricsProvider
-//                    )
-                )
-            )
+            sink = FaultBarrierTileSink(CompositeTileSink(sinks))
         ).process()
     }
 }

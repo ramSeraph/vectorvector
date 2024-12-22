@@ -15,9 +15,15 @@ class FilesystemBlockStore(
     private val folder: File,
     private val log: KLogger = KotlinLogging.logger {}
 ) : BlockStore {
+
+    private val emptyTile = EmptyTile(blockExtent)
+
     override fun load(blockId: BlockId): ElevationTile {
+        if (!blockId.valid) {
+            return emptyTile
+        }
         val file = File(folder, "srtm_${blockId.x.keyString()}_${blockId.y.keyString()}.tif")
-        return if (file.exists()) load(file) else EmptyTile(blockExtent)
+        return if (file.exists()) load(file) else emptyTile
     }
 
     private fun load(file: File): ElevationTile {

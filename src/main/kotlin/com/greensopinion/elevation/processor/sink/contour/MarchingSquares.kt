@@ -126,7 +126,7 @@ class MarchingSquares(
             return if (v1 == v2) {
                 ((p1 + p2) / 2.0).round()
             } else {
-                val t = (contourLevel - v1.meters).toDouble() / (v2 - v1).meters
+                val t = (contourLevel - v1.meters) / (v2 - v1).meters
                 val intersection = DoublePoint(
                     p1.x + t * (p2.x - p1.x),
                     p1.y + t * (p2.y - p1.y)
