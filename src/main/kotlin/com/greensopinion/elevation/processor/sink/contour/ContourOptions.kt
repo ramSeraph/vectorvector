@@ -25,4 +25,7 @@ class ContourOptions(
 
     /** The threshold used for major contour lines */
     val majorLevel: Int = 200,
+
+    /** The minimum level, exclusive, to include in contour lines */
+    val minLevelExclusive: Int = 0
 )

@@ -30,7 +30,7 @@ class ContourVectorTileMapper(
                 }
                 return index
             }
-            for (elevation in elevations) {
+            for (elevation in elevations.filter { it.meters > options.minLevelExclusive }) {
                 val elevationIndex = indexedValue(elevation.meters.roundToInt())
                 val levelIndex = indexedValue(if (elevation.meters.roundToInt() % options.majorLevel == 0) 1 else 0)
                 for (line in contours[elevation]!!) {

@@ -55,8 +55,8 @@ fun main(args: Array<String>) {
         sinks.add(
             VectorTileSink(
                 contourOptionsProvider = { tile ->
-                    if (tile.id.z < 12) {
-                        ContourOptions(minorLevel = 200, majorLevel = 1000)
+                    if (tile.id.z < 10) {
+                        ContourOptions(minorLevel = 50, majorLevel = 100)
                     } else
                         ContourOptions(minorLevel = 20, majorLevel = 100)
                 },
