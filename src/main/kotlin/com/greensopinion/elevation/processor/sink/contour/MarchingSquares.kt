@@ -2,6 +2,8 @@ package com.greensopinion.elevation.processor.sink.contour
 import com.greensopinion.elevation.processor.Elevation
 import com.greensopinion.elevation.processor.ElevationTile
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class MarchingSquares(
     private val tile: ElevationTile,
@@ -203,8 +205,8 @@ class MarchingSquares(
 
     private fun contourLevels(interval: Int): List<Int> {
         val bounds = tile.elevationBounds
-        val lower = (bounds.min.meters / interval) * interval
-        val upper = (bounds.max.meters / interval) * interval
+        val lower = (floor(bounds.min.meters).toInt() / interval) * interval
+        val upper = (ceil(bounds.max.meters).toInt() / interval) * interval
         return (lower..upper step interval).toList()
     }
 

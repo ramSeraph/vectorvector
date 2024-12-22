@@ -17,8 +17,9 @@ class TerrariumTileReader {
                 val rgb = image.getRGB(x, y)
                 val r = ((rgb shr 16) and 0xFF)
                 val g = ((rgb shr 8) and 0xFF)
+                val b = rgb and 0xFF
 
-                return Elevation(meters = ((r * 256) + g) - 32768)
+                return Elevation(meters = (((r.toDouble() * 256) + g.toDouble() + (b/256.0)) - 32768.0).toDouble())
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.greensopinion.elevation.processor
 
 @JvmInline
-value class Elevation(val meters: Int) {
+value class Elevation(val meters: Double) {
     val valid: Boolean get() = this != INVALID_ELEVATION
-    operator fun times(multiplier: Double) = Elevation(meters = (meters * multiplier).toInt())
+    operator fun times(multiplier: Double) = Elevation(meters = meters * multiplier)
     operator fun minus(other: Elevation): Elevation =
         if (other.valid && valid) Elevation(meters = meters - other.meters) else this
 
@@ -14,11 +14,13 @@ value class Elevation(val meters: Int) {
     operator fun compareTo(other: Int): Int {
         return this.meters.compareTo(other)
     }
+
+    override fun toString(): String = "$meters"
 }
 
 data class ElevationBounds(val min: Elevation, val max: Elevation)
 
-val INVALID_ELEVATION = Elevation(meters = Int.MIN_VALUE)
+val INVALID_ELEVATION = Elevation(meters = Double.NEGATIVE_INFINITY)
 
 abstract class ElevationTile {
     abstract val empty: Boolean
@@ -72,7 +74,7 @@ private class ScaledTile(
 private class MaterializedTile(delegate: ElevationTile) : ElevationTile() {
     override val empty = delegate.empty
     override val extent = delegate.extent
-    private val data = IntArray(extent * extent)
+    private val data = DoubleArray(extent * extent)
 
     init {
         for (x in 0..<extent) {

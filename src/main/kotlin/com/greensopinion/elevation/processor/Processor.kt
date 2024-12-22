@@ -2,10 +2,13 @@ package com.greensopinion.elevation.processor
 
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
 import com.greensopinion.elevation.processor.metrics.Progress
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.time.Duration
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 class Processor(
     private val tileRange: TileRange,

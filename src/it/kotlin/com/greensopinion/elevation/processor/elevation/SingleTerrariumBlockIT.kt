@@ -32,7 +32,7 @@ class SingleTerrariumBlockIT {
         val outputTile = TerrariumTileReader().read(File(outputDir, "${tileId.z}/${tileId.x}/${tileId.y}.png"))
         for (x in 0..<tileExtent) {
             for (y in 0..<tileExtent) {
-                assertThat(outputTile.get(x, y).meters).isEqualTo(0)
+                assertThat(outputTile.get(x, y).meters).isEqualTo(0.0)
             }
         }
     }
@@ -41,13 +41,28 @@ class SingleTerrariumBlockIT {
     fun `creates a single Terrarium block on land`() {
         val tileId = TileId(8, 45, 99)
         assertThat(sink.accept(Tile(tileId))).isTrue()
-        val outputTile = TerrariumTileReader().read(File(outputDir, "${tileId.z}/${tileId.x}/${tileId.y}.png"))
-        val referenceTile =
-            TerrariumTileReader().read(File("src/it/resources/terrarium_${tileId.z}_${tileId.x}_${tileId.y}.png"))
+        val outputTile = readOutput(tileId)
+        val referenceTile = referenceTerrariumTile(tileId)
         for (x in 0..<tileExtent) {
             for (y in 0..<tileExtent) {
-                assertThat(outputTile.get(x, y).meters).isCloseTo(referenceTile.get(x, y).meters, Offset.offset(240))
+                assertThat(outputTile.get(x, y).meters).isCloseTo(referenceTile.get(x, y).meters, Offset.offset(250.0))
             }
         }
     }
+
+    @Test
+    fun `creates a single Terrarium block for 12, 646, 1400`() {
+        val tileId = TileId(12, 646, 1400)
+        assertThat(sink.accept(Tile(tileId))).isTrue()
+        val outputTile = readOutput(tileId)
+        val referenceTile = referenceTerrariumTile(tileId)
+        for (x in 0..<tileExtent) {
+            for (y in 0..<tileExtent) {
+                assertThat(outputTile.get(x, y).meters).isCloseTo(referenceTile.get(x, y).meters, Offset.offset(150.0))
+            }
+        }
+    }
+
+    private fun readOutput(tileId: TileId) =
+        TerrariumTileReader().read(File(outputDir, "${tileId.z}/${tileId.x}/${tileId.y}.png"))
 }

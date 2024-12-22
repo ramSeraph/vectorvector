@@ -4,7 +4,6 @@ import com.greensopinion.elevation.processor.Tile
 import com.greensopinion.elevation.processor.TileId
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import com.greensopinion.elevation.processor.sink.FilesystemTileRepository
-import com.greensopinion.elevation.processor.sink.TerrariumSink
 import com.greensopinion.elevation.processor.sink.VectorTileSink
 import com.greensopinion.elevation.processor.sink.contour.ContourOptions
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +31,5 @@ class SingleVectorTileIT {
         assertThat(sink.accept(Tile(tileId))).isTrue()
         val tile = File(outputDir, "${tileId.z}/${tileId.x}/${tileId.y}.pbf")
         assertThat(tile.exists()).isTrue()
-        //FIXME: remove
-        File("/Users/dgreen/git/vector_tile_dem/tmp/tile-12_646_1400.pbf").writeBytes(tile.readBytes())
     }
 }

@@ -1,13 +1,16 @@
 package com.greensopinion.elevation.processor.elevation
 
-import com.greensopinion.elevation.processor.*
+import com.greensopinion.elevation.processor.Elevation
+import com.greensopinion.elevation.processor.ElevationTile
+import com.greensopinion.elevation.processor.Position
+import com.greensopinion.elevation.processor.TileId
+import com.greensopinion.elevation.processor.TilePosition
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlin.math.roundToInt
 
 class BlockElevationDataStore(
-    private val blockExtent: Int,
-    private val blockSize: Degrees,
+    blockExtent: Int,
+    blockSize: Degrees,
     private val tileExtent: Int,
     private val blockStore: BlockStore,
     private val log: KLogger = KotlinLogging.logger {}
@@ -30,7 +33,7 @@ class BlockElevationDataStore(
             val blockPosition = blockMapper.map(coordinates)
             val block = blockIdToBlock[blockPosition.blockId]
                 ?: blockIdToBlock.computeIfAbsent(blockPosition.blockId) { blockStore.load(blockPosition.blockId) }
-            return block.get(blockPosition.position.x.roundToInt(), blockPosition.position.y.roundToInt())
+            return ElevationInterpolator(block).get(blockPosition.position)
         }
 
         private fun isEmpty(tile: TileId, position: Position): Boolean {

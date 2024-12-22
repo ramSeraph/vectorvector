@@ -25,7 +25,7 @@ class ContourLineGenerator(
         }
         val algorithm = MarchingSquares(area,options.extent,options.buffer)
         val isolines = algorithm.generateIsolines(options.minorLevel)
-        return isolines.entries.associate { Pair(Elevation(meters = it.key), it.value.toLines()) }
+        return isolines.entries.associate { Pair(Elevation(meters = it.key.toDouble()), it.value.toLines()) }
     }
 }
 

@@ -18,7 +18,7 @@ class BlockMapper(
             y = floor((90.0 - coordinates.latitude) / blockSize.degrees).toInt() - yOffset
         )
         val min = Coordinates(
-            latitude = -((block.y + yOffset) * blockSize.degrees - 90.0) - blockSize.degrees,
+            latitude = -((block.y + yOffset.toDouble()) * blockSize.degrees - 90.0) - blockSize.degrees,
             longitude = (block.x - xOffset.toDouble()) * blockSize.degrees - 180.0
         )
         val max = Coordinates(

@@ -39,9 +39,9 @@ class FilesystemBlockStore(
                         throw Exception("invalid coordinates: ${x},${y} in [${raster.width},${raster.height}]")
                     }
                     if (sample == -32768) {
-                        return Elevation(meters = 0)
+                        return Elevation(meters = 0.0)
                     }
-                    return Elevation(meters = sample)
+                    return Elevation(meters = sample.toDouble())
                 }
             }
         }

@@ -57,10 +57,10 @@ class ElevationTileAreaTest {
         val elevationRange = extent * extent
         val originElevation = elevationSeed
         elevationSeed += elevationRange
-        doAnswer { invoation ->
-            val x = invoation.getArgument<Int>(0)
-            val y = invoation.getArgument<Int>(1)
-            originElevation + (y * extent) + x
+        doAnswer { invocation ->
+            val x = invocation.getArgument<Int>(0)
+            val y = invocation.getArgument<Int>(1)
+            originElevation.toDouble() + (y * extent) + x
         }.whenever(it).get(any(), any())
         doReturn(extent).whenever(it).extent
     }

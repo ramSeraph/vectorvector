@@ -13,6 +13,9 @@ data class Offset(
     val y: Double
 ) {
     fun clamp(maximum: Double): Offset = Offset(x = min(maximum, x), y = min(maximum, y))
+
+    fun floor() = Offset(kotlin.math.floor(x), kotlin.math.floor(y))
+    fun ceil() = Offset(kotlin.math.ceil(x), kotlin.math.ceil(y))
 }
 
 data class BlockOffset(

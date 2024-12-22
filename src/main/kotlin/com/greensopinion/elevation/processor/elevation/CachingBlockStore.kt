@@ -4,7 +4,6 @@ import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.greensopinion.elevation.processor.ElevationTile
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
-import java.io.Closeable
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.Future

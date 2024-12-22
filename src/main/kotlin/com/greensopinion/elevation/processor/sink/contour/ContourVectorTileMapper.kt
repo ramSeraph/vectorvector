@@ -31,8 +31,8 @@ class ContourVectorTileMapper(
                 return index
             }
             for (elevation in elevations) {
-                val elevationIndex = indexedValue(elevation.meters)
-                val levelIndex = indexedValue(if (elevation.meters % options.majorLevel == 0) 1 else 0)
+                val elevationIndex = indexedValue(elevation.meters.roundToInt())
+                val levelIndex = indexedValue(if (elevation.meters.roundToInt() % options.majorLevel == 0) 1 else 0)
                 for (line in contours[elevation]!!) {
                     addFeatures(VectorTile.Tile.Feature.newBuilder().apply {
                         type = VectorTile.Tile.GeomType.LINESTRING

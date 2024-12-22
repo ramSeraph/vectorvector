@@ -1,6 +1,5 @@
 package com.greensopinion.elevation.processor.sink
 
-import com.greensopinion.elevation.processor.Tile
 import com.greensopinion.elevation.processor.TileId
 import java.io.File
 

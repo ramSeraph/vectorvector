@@ -174,5 +174,5 @@ private class TestTile(
     override val empty: Boolean = false
     override val extent: Int = tileSize
 
-    override fun get(x: Int, y: Int): Elevation = Elevation(meters = elevation(x, y))
+    override fun get(x: Int, y: Int): Elevation = Elevation(meters = elevation(x, y).toDouble())
 }
