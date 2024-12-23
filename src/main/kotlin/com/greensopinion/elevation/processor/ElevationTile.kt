@@ -2,7 +2,7 @@ package com.greensopinion.elevation.processor
 
 @JvmInline
 value class Elevation(val meters: Double) {
-    val valid: Boolean get() = this != INVALID_ELEVATION //&& !meters.isNaN()
+    val valid: Boolean get() = meters > INVALID_ELEVATION.meters
     operator fun times(multiplier: Double) = Elevation(meters = meters * multiplier)
     operator fun minus(other: Elevation): Elevation =
         if (other.valid && valid) Elevation(meters = meters - other.meters) else this

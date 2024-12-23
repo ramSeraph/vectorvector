@@ -3,6 +3,7 @@ package com.greensopinion.elevation.processor.elevation
 import com.greensopinion.elevation.processor.Elevation
 import com.greensopinion.elevation.processor.ElevationTile
 import com.greensopinion.elevation.processor.EmptyTile
+import com.greensopinion.elevation.processor.metrics.MetricsProvider
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
@@ -13,6 +14,7 @@ import javax.imageio.ImageReader
 class FilesystemBlockStore(
     private val blockExtent: Int,
     private val folder: File,
+    private val metricsProvider: MetricsProvider,
     private val log: KLogger = KotlinLogging.logger {}
 ) : BlockStore {
 
@@ -22,6 +24,7 @@ class FilesystemBlockStore(
         if (!blockId.valid) {
             return emptyTile
         }
+        metricsProvider.get().addCount("FilesystemBlockStore.load")
         val file = File(folder, "srtm_${blockId.x.keyString()}_${blockId.y.keyString()}.tif")
         return if (file.exists()) load(file) else emptyTile
     }

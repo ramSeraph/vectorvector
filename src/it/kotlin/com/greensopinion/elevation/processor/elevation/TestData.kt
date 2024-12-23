@@ -5,12 +5,14 @@ import com.greensopinion.elevation.processor.TileId
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import java.io.File
 
+private val metricsProvider = SingletonMetricsProvider()
 val testBlockStore = CachingBlockStore(
     FilesystemBlockStore(
         blockExtent = 6000,
-        folder = File("../../data/tif")
+        folder = File("../../data/tif"),
+        metricsProvider
     ),
-    metricsProvider = SingletonMetricsProvider()
+    metricsProvider
 )
 
 fun referenceTerrariumTile(tileId: TileId): ElevationTile =

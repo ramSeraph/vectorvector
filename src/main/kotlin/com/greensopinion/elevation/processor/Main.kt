@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
             blockExtent = blockExtent,
             tileExtent = tileExtent,
             blockStore = CachingBlockStore(
-                FilesystemBlockStore(blockExtent = blockExtent, folder = options.dataDir!!),
+                FilesystemBlockStore(blockExtent = blockExtent, folder = options.dataDir!!, metricsProvider = metricsProvider),
                 metricsProvider
             )
         )
@@ -55,10 +55,14 @@ fun main(args: Array<String>) {
         sinks.add(
             VectorTileSink(
                 contourOptionsProvider = { tile ->
-                    if (tile.id.z < 10) {
+                    if (tile.id.z < 9) {
+                        ContourOptions(minorLevel = 100, majorLevel = 200)
+                    } else if (tile.id.z < 10) {
                         ContourOptions(minorLevel = 50, majorLevel = 100)
-                    } else
+                    } else if (tile.id.z < 12) {
                         ContourOptions(minorLevel = 20, majorLevel = 100)
+                    } else
+                        ContourOptions(minorLevel = 10, majorLevel = 50)
                 },
                 repository = repository,
                 elevationDataStore = dataStore,
@@ -81,9 +85,11 @@ fun main(args: Array<String>) {
 
 private fun validateData(options: CliOptions) {
     log.info { "Validating data only" }
+    val metricsProvider = SingletonMetricsProvider()
     val blockStore = FilesystemBlockStore(
         blockExtent = 6000,
-        folder = options.dataDir!!
+        folder = options.dataDir!!,
+        metricsProvider
     )
     blockStore.validateAll()
     log.info { "Done" }
