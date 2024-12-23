@@ -24,16 +24,18 @@ class CliOptions {
 
     @Option(names = ["-minZ"])
     var minZ: Int = 6
-    @Option(names = ["-minX"])
-    var minX: Int = 8
-    @Option(names = ["-minY"])
-    var minY: Int = 20
     @Option(names = ["-maxZ"])
     var maxZ: Int = 12
+
+    @Option(names = ["-minX"])
+    var minX: Int = 10
     @Option(names = ["-maxX"])
-    var maxX: Int = 24
+    var maxX: Int = 10
+
+    @Option(names = ["-minY"])
+    var minY: Int = 21
     @Option(names = ["-maxY"])
-    var maxY: Int = 29
+    var maxY: Int = 21
 }
 
 enum class CliOutputFormat {
