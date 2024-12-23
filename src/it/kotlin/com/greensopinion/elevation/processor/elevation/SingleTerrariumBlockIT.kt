@@ -3,7 +3,7 @@ package com.greensopinion.elevation.processor.elevation
 import com.greensopinion.elevation.processor.Tile
 import com.greensopinion.elevation.processor.TileId
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
-import com.greensopinion.elevation.processor.sink.FilesystemTileRepository
+import com.greensopinion.elevation.processor.repository.FilesystemTileRepository
 import com.greensopinion.elevation.processor.sink.TerrariumSink
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset

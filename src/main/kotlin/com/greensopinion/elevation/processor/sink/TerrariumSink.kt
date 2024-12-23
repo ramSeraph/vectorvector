@@ -6,6 +6,7 @@ import com.greensopinion.elevation.processor.Tile
 import com.greensopinion.elevation.processor.TileSink
 import com.greensopinion.elevation.processor.elevation.ElevationDataStore
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
+import com.greensopinion.elevation.processor.repository.TileRepository
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO

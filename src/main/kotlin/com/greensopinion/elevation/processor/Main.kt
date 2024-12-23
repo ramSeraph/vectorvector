@@ -9,11 +9,11 @@ import com.greensopinion.elevation.processor.metrics.PeriodicMetrics
 import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import com.greensopinion.elevation.processor.sink.CompositeTileSink
 import com.greensopinion.elevation.processor.sink.FaultBarrierTileSink
-import com.greensopinion.elevation.processor.sink.FilesystemTileRepository
-import com.greensopinion.elevation.processor.sink.MbtilesTileRepository
-import com.greensopinion.elevation.processor.sink.SwitchingTileRepository
+import com.greensopinion.elevation.processor.repository.FilesystemTileRepository
+import com.greensopinion.elevation.processor.repository.MbtilesTileRepository
+import com.greensopinion.elevation.processor.repository.SwitchingTileRepository
 import com.greensopinion.elevation.processor.sink.TerrariumSink
-import com.greensopinion.elevation.processor.sink.TileRepository
+import com.greensopinion.elevation.processor.repository.TileRepository
 import com.greensopinion.elevation.processor.sink.VectorTileSink
 import com.greensopinion.elevation.processor.sink.contour.ContourOptions
 import io.github.oshai.kotlinlogging.KotlinLogging
