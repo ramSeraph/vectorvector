@@ -2,6 +2,7 @@ package com.greensopinion.elevation.processor.repository
 
 import com.greensopinion.elevation.processor.TileId
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
+import com.greensopinion.elevation.processor.util.newThreadFactory
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.imintel.mbtiles4j.MBTilesWriter
@@ -24,15 +25,10 @@ class MbtilesTileRepository(
         1, 1,
         0L, TimeUnit.MILLISECONDS,
         LinkedBlockingQueue<Runnable>(maximumQueueSize),
-        { r ->
-            Thread(r).also {
-                it.name = "Mbtiles-writer-${threadIdSeed.incrementAndGet()}"
-            }
-        },
-        { r, e ->
-            e.queue.put(r)
-        }
-    )
+        newThreadFactory("Mbtiles-writer")
+    ) { r, e ->
+        e.queue.put(r)
+    }
 
     init {
         outputFile.delete()

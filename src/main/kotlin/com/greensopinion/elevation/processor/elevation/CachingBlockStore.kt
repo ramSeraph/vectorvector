@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader
 import com.greensopinion.elevation.processor.ElevationTile
 import com.greensopinion.elevation.processor.EmptyTile
 import com.greensopinion.elevation.processor.metrics.MetricsProvider
+import com.greensopinion.elevation.processor.util.newThreadFactory
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.Collections
@@ -24,12 +25,10 @@ class CachingBlockStore(
             override fun load(key: BlockId) = loadAsync(key)
         })
     private val predictiveLoading: MutableSet<BlockId> = Collections.synchronizedSet(mutableSetOf())
-    private val loader = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) { r ->
-        Thread(r).also {
-            it.isDaemon = true
-            it.name = "CachingBlockStore-loader-${threadIdSeed.incrementAndGet()}"
-        }
-    }
+    private val loader = Executors.newFixedThreadPool(
+        Runtime.getRuntime().availableProcessors(),
+        newThreadFactory("CachingBlockStore-loader", daemon = true)
+    )
 
     override fun load(blockId: BlockId): ElevationTile {
         if (blockId.valid) {
@@ -71,5 +70,3 @@ class CachingBlockStore(
         return future
     }
 }
-
-private val threadIdSeed = AtomicInteger()
