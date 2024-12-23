@@ -19,16 +19,24 @@ class CliOptions {
     @Option(names=["--vector"])
     var vector: Boolean = true
 
+    @Option(names = ["-f", "--outputFormat"], required = true, description = ["The format of the output, must be one of \${COMPLETION-CANDIDATES}"])
+    var outputFormat: CliOutputFormat? = null
+
     @Option(names = ["-minZ"])
     var minZ: Int = 6
     @Option(names = ["-minX"])
-    var minX: Int = 0
+    var minX: Int = 8
     @Option(names = ["-minY"])
-    var minY: Int = 0
+    var minY: Int = 20
     @Option(names = ["-maxZ"])
     var maxZ: Int = 12
     @Option(names = ["-maxX"])
-    var maxX: Int = 63
+    var maxX: Int = 24
     @Option(names = ["-maxY"])
-    var maxY: Int = 63
+    var maxY: Int = 29
+}
+
+enum class CliOutputFormat {
+    files,
+    mbtiles
 }

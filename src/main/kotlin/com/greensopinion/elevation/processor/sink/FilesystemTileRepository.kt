@@ -11,4 +11,8 @@ class FilesystemTileRepository(
         file.parentFile.mkdirs()
         file.writeBytes(bytes)
     }
+
+    override fun close() {
+        // nothing to do!
+    }
 }

@@ -9,7 +9,8 @@ class CachingElevationDataStore(
     private val delegate: ElevationDataStore
 ) : ElevationDataStore {
 
-    private val cache = CacheBuilder.newBuilder().maximumSize(200)
+    private val cache = CacheBuilder.newBuilder()
+        .maximumSize(200)
         .build(object : CacheLoader<TileId, ElevationTile>() {
             override fun load(key: TileId) = delegate.get(key).materialize()
         })

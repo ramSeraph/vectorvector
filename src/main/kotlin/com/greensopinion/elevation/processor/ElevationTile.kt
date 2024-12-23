@@ -45,7 +45,7 @@ abstract class ElevationTile {
 
     abstract fun get(x: Int, y: Int): Elevation
 
-    open fun materialize(): ElevationTile = if (empty) this else MaterializedTile(this)
+    open fun materialize(buffer: Int = 0): ElevationTile = if (empty) this else MaterializedTile(this, buffer)
 
     fun scale(multiplier: Double): ElevationTile =
         if (multiplier == 1.0 || empty) this else ScaledTile(multiplier, this)
@@ -71,21 +71,24 @@ private class ScaledTile(
     }
 }
 
-private class MaterializedTile(delegate: ElevationTile) : ElevationTile() {
+private class MaterializedTile(delegate: ElevationTile, private val buffer: Int) : ElevationTile() {
     override val empty = delegate.empty
     override val extent = delegate.extent
-    private val data = DoubleArray(extent * extent)
+    private val length = extent + 2*buffer
+    private val data = DoubleArray(length * length)
 
     init {
-        for (x in 0..<extent) {
-            for (y in 0..<extent) {
-                data[x + y * extent] = delegate.get(x, y).meters
+        val lower = 0-buffer
+        val upper = extent+buffer
+        for (x in lower..<upper) {
+            for (y in lower..<upper) {
+                data[(x+buffer) + (y+buffer) * length] = delegate.get(x, y).meters
             }
         }
     }
 
-    override fun get(x: Int, y: Int): Elevation = Elevation(meters = data[x + y * extent])
+    override fun get(x: Int, y: Int): Elevation = Elevation(meters = data[(x+buffer) + (y+buffer) * length])
 
-    override fun materialize(): ElevationTile = this
+    override fun materialize(buffer: Int): ElevationTile = this
 }
 

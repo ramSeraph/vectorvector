@@ -47,7 +47,9 @@ class Progress(
             val estimated = Duration.ofSeconds((remaining / perSecond).toLong())
             estimation = estimated.toLogString()
         }
-        log.info { "$completed completed, $remaining remaining. Estimated time remaining: $estimation" }
+        log.info { "$completed completed, $remaining remaining" }
+        log.info { "elapsed time: ${elapsed.toLogString()}" }
+        log.info { "estimated time remaining: $estimation" }
     }
 }
 

@@ -19,7 +19,7 @@ class ContourLineGenerator(
     private val dataStore: ElevationDataStore
 ) {
     fun generate(tile: TileId): Map<Elevation, List<Line>> {
-        val area = ElevationTileArea(tile, dataStore.get(tile), dataStore).scale(options.multiplier)
+        val area = ElevationTileArea(tile, dataStore.get(tile), dataStore).scale(options.multiplier).materialize(buffer = options.buffer)
         if (area.empty) {
             return mapOf()
         }

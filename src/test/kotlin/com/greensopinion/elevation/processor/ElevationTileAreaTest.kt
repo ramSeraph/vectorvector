@@ -38,18 +38,27 @@ class ElevationTileAreaTest {
 
     @Test
     fun `provides elevation`() {
-        assertElevation(0, 0, tile.get(0,0))
-        assertElevation(-1, -1, leftTop.get(tile.extent-1,tile.extent-1))
-        assertElevation(-1, 0, left.get(tile.extent-1,0))
-        assertElevation(-1, tile.extent, leftBottom.get(tile.extent-1,0))
-        assertElevation(0, -1, top.get(0,tile.extent-1))
-        assertElevation(tile.extent, -1, rightTop.get(0,tile.extent-1))
-        assertElevation(tile.extent, tile.extent, rightBottom.get(0,0))
-        assertElevation(tile.extent, 0, right.get(0,0))
+        assertTileElevation(tileWithNeighbours)
     }
 
-    private fun assertElevation(x: Int, y: Int, expected: Elevation) {
-        assertThat(tileWithNeighbours.get(x, y)).isEqualTo(expected)
+    @Test
+    fun `materialized with buffer provides elevation`() {
+        assertTileElevation(tileWithNeighbours.materialize(buffer = 1))
+    }
+
+
+    private fun assertTileElevation(tile: ElevationTile) {
+        assertElevation(tile, 0, 0, tile.get(0, 0))
+        assertElevation(tile, -1, -1, leftTop.get(tile.extent - 1, tile.extent - 1))
+        assertElevation(tile, -1, 0, left.get(tile.extent - 1, 0))
+        assertElevation(tile, -1, tile.extent, leftBottom.get(tile.extent - 1, 0))
+        assertElevation(tile, 0, -1, top.get(0, tile.extent - 1))
+        assertElevation(tile, tile.extent, -1, rightTop.get(0, tile.extent - 1))
+        assertElevation(tile, tile.extent, tile.extent, rightBottom.get(0, 0))
+        assertElevation(tile, tile.extent, 0, right.get(0, 0))
+    }
+    private fun assertElevation(tile: ElevationTile, x: Int, y: Int, expected: Elevation) {
+        assertThat(tile.get(x, y)).isEqualTo(expected)
     }
 
     private fun mockTile(): ElevationTile = mock<ElevationTile>().also {

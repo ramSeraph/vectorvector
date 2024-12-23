@@ -18,7 +18,8 @@ class CachingBlockStore(
     private val metricsProvider: MetricsProvider,
     private val log: KLogger = KotlinLogging.logger { }
 ) : BlockStore {
-    private val cache = CacheBuilder.newBuilder().maximumSize(50)
+    private val cache = CacheBuilder.newBuilder()
+        .maximumSize(25)
         .build(object : CacheLoader<BlockId, Future<ElevationTile>>() {
             override fun load(key: BlockId) = loadAsync(key)
         })

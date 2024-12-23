@@ -10,11 +10,15 @@ import com.greensopinion.elevation.processor.metrics.SingletonMetricsProvider
 import com.greensopinion.elevation.processor.sink.CompositeTileSink
 import com.greensopinion.elevation.processor.sink.FaultBarrierTileSink
 import com.greensopinion.elevation.processor.sink.FilesystemTileRepository
+import com.greensopinion.elevation.processor.sink.MbtilesTileRepository
+import com.greensopinion.elevation.processor.sink.SwitchingTileRepository
 import com.greensopinion.elevation.processor.sink.TerrariumSink
+import com.greensopinion.elevation.processor.sink.TileRepository
 import com.greensopinion.elevation.processor.sink.VectorTileSink
 import com.greensopinion.elevation.processor.sink.contour.ContourOptions
 import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
+import java.io.File
 import java.time.Duration
 
 private val log = KotlinLogging.logger { }
@@ -34,52 +38,70 @@ fun main(args: Array<String>) {
             blockExtent = blockExtent,
             tileExtent = tileExtent,
             blockStore = CachingBlockStore(
-                FilesystemBlockStore(blockExtent = blockExtent, folder = options.dataDir!!, metricsProvider = metricsProvider),
+                FilesystemBlockStore(
+                    blockExtent = blockExtent,
+                    folder = options.dataDir!!,
+                    metricsProvider = metricsProvider
+                ),
                 metricsProvider
             )
         )
     )
-    val repository = FilesystemTileRepository(outputFolder = options.outputDir!!)
-    val sinks = mutableListOf<TileSink>()
-    if (options.terrarium) {
-        sinks.add(
-            TerrariumSink(
-                extent = tileExtent,
-                repository = repository,
-                elevationDataStore = dataStore,
-                metricsProvider = metricsProvider
-            )
-        )
+    val outputFolder = options.outputDir!!
+    val repository: TileRepository = if (options.outputFormat == CliOutputFormat.mbtiles) {
+        val extensionToRepository = mutableMapOf<String, TileRepository>()
+        if (options.terrarium) {
+            extensionToRepository["png"] = MbtilesTileRepository(File(outputFolder, "terrarium.mbtiles"),metricsProvider)
+        }
+        if (options.vector) {
+            extensionToRepository["pbf"] = MbtilesTileRepository(File(outputFolder, "vector.mbtiles"),metricsProvider)
+        }
+        SwitchingTileRepository(extensionToRepository)
+    } else {
+        FilesystemTileRepository(outputFolder)
     }
-    if (options.vector) {
-        sinks.add(
-            VectorTileSink(
-                contourOptionsProvider = { tile ->
-                    if (tile.id.z < 9) {
-                        ContourOptions(minorLevel = 100, majorLevel = 200)
-                    } else if (tile.id.z < 10) {
-                        ContourOptions(minorLevel = 50, majorLevel = 100)
-                    } else if (tile.id.z < 12) {
-                        ContourOptions(minorLevel = 20, majorLevel = 100)
-                    } else
-                        ContourOptions(minorLevel = 10, majorLevel = 50)
-                },
-                repository = repository,
-                elevationDataStore = dataStore,
-                metricsProvider = metricsProvider
+    repository.use {
+        val sinks = mutableListOf<TileSink>()
+        if (options.terrarium) {
+            sinks.add(
+                TerrariumSink(
+                    extent = tileExtent,
+                    repository = repository,
+                    elevationDataStore = dataStore,
+                    metricsProvider = metricsProvider
+                )
             )
-        )
-    }
-    require(sinks.isNotEmpty()) { "No outputs specified, nothing to do!" }
-    PeriodicMetrics(
-        interval = Duration.ofSeconds(30),
-        metrics = metricsProvider.metrics
-    ).use {
-        Processor(
-            tileRange = options.toTileRange(),
-            metricsProvider = metricsProvider,
-            sink = FaultBarrierTileSink(CompositeTileSink(sinks))
-        ).process()
+        }
+        if (options.vector) {
+            sinks.add(
+                VectorTileSink(
+                    contourOptionsProvider = { tile ->
+                        if (tile.id.z < 9) {
+                            ContourOptions(minorLevel = 100, majorLevel = 200)
+                        } else if (tile.id.z < 10) {
+                            ContourOptions(minorLevel = 50, majorLevel = 100)
+                        } else if (tile.id.z < 12) {
+                            ContourOptions(minorLevel = 20, majorLevel = 100)
+                        } else
+                            ContourOptions(minorLevel = 10, majorLevel = 50)
+                    },
+                    repository = repository,
+                    elevationDataStore = dataStore,
+                    metricsProvider = metricsProvider
+                )
+            )
+        }
+        require(sinks.isNotEmpty()) { "No outputs specified, nothing to do!" }
+        PeriodicMetrics(
+            interval = Duration.ofSeconds(30),
+            metrics = metricsProvider.metrics
+        ).use {
+            Processor(
+                tileRange = options.toTileRange(),
+                metricsProvider = metricsProvider,
+                sink = FaultBarrierTileSink(CompositeTileSink(sinks))
+            ).process()
+        }
     }
 }
 

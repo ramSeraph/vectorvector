@@ -2,9 +2,9 @@
   <configuration default="false" name="MainKt" type="JetRunConfigurationType" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.greensopinion.elevation.processor.MainKt" />
     <module name="elevation-processor" />
-    <option name="PROGRAM_PARAMETERS" value="--data $PROJECT_DIR$/../../data/tif --output $PROJECT_DIR$/../../output" />
+    <option name="PROGRAM_PARAMETERS" value="--outputFormat mbtiles --data $PROJECT_DIR$/../../data/tif --output $PROJECT_DIR$/../../output" />
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-Xmx32g -XX:+EnableDynamicAgentLoading" />
+    <option name="VM_PARAMETERS" value="-Xmx42g -XX:+EnableDynamicAgentLoading -XX:+HeapDumpOnOutOfMemoryError" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

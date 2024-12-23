@@ -156,6 +156,21 @@
             <artifactId>guava</artifactId>
             <version>33.4.0-jre</version>
         </dependency>
+        <dependency>
+            <groupId>org.imintel</groupId>
+            <artifactId>mbtiles4j</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.47.1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
