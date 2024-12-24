@@ -102,7 +102,7 @@ class MbtilesTileRepository(
         statement.use {
             it.setInt(1, tile.z)
             it.setInt(2, tile.x)
-            it.setInt(3, tile.y)
+            it.setInt(3, tile.y.toTms(tile.z))
             val results = it.executeQuery()
             results.use { r ->
                 if (r.next()) {
@@ -117,7 +117,7 @@ class MbtilesTileRepository(
         try {
             insert.setInt(1, tile.z)
             insert.setInt(2, tile.x)
-            insert.setInt(3, tile.y)
+            insert.setInt(3, tile.y.toTms(tile.z))
             insert.setBytes(4, bytes)
             insert.execute()
             metricsProvider.get().addCount("Mbtiles.written")
@@ -180,3 +180,5 @@ private fun Connection.executeStatement(sql: String) {
         statement.execute(sql)
     }
 }
+
+private fun Int.toTms(z: Int) = (1 shl z) - 1 - this
