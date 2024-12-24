@@ -1,7 +1,7 @@
 <project default="generate">
     <property name="source.folder.kotlin" value="src/main/kotlin"/>
     <property name="source.folder.java" value="src/main/kotlin"/>
-    <property name="target.package" value="com.greensopinion.elevation.processor.vector.pbf"/>
+    <property name="target.package" value="com.greensopinion.vectorvector.vector.pbf"/>
     <property name="source.vector.proto" value="https://raw.githubusercontent.com/mapbox/vector-tile-spec/refs/heads/master/2.1/vector_tile.proto"/>
     <property name="project.build.tmp" value="target/tmp"/>
     <property name="project.build.tmp.proto" value="target/tmp/vector_tile.proto"/>
