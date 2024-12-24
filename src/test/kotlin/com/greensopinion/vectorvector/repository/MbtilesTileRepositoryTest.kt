@@ -34,4 +34,17 @@ class MbtilesTileRepositoryTest {
             assertThat(tileBytes).isEqualTo(bytes)
         }
     }
+
+    @Test
+    fun `provides metadata`() {
+        MbtilesTileRepository(file, metricsProvider).use {
+            it.setMetadata(MbtilesMetadata(
+                name = "a name",
+                minZoom = 0,
+                maxZoom = 6,
+                json = "{ \"a\": \"json\" }",
+                format = "pbf"
+            ))
+        }
+    }
 }

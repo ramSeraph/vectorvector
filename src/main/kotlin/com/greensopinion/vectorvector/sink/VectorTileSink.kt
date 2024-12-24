@@ -34,3 +34,25 @@ class VectorTileSink(
         return true
     }
 }
+
+fun vectorSchema(minZoom: Int, maxZoom: Int,contourLayer: String, levelName: String, elevationName: String): String = """
+{
+    "tilejson": "3.0.0",
+    "format": "pbf",
+    "maxzoom": $maxZoom,
+    "minzoom": $minZoom,
+    "scheme": "xyz",
+    "vector_layers": [
+        {
+            "id": "$contourLayer",
+            "description": "Elevation contour lines",
+            "maxzoom": $maxZoom,
+            "minzoom": $minZoom,
+            "fields": {
+                "$elevationName": "Integer. The contour line elevation in meters.",
+                "$levelName": "Indicator for major or minor contour lines. A value of 1 indicates a major line, otherwise 0."
+            }
+        }
+    ]
+}
+   """.trimIndent().trim()

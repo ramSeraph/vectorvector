@@ -2,7 +2,7 @@
   <configuration default="false" name="MainKt" type="JetRunConfigurationType" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.greensopinion.vectorvector.MainKt" />
     <module name="vectorvector" />
-    <option name="PROGRAM_PARAMETERS" value="--outputFormat mbtiles --data $PROJECT_DIR$/../../data/tif --output $PROJECT_DIR$/../../output" />
+    <option name="PROGRAM_PARAMETERS" value="--outputFormat mbtiles --data $PROJECT_DIR$/../experiments/elevation/data/tif --output $PROJECT_DIR$/../experiments/elevation/output " />
     <shortenClasspath name="NONE" />
     <option name="VM_PARAMETERS" value="-Xmx42g -XX:+EnableDynamicAgentLoading -XX:+HeapDumpOnOutOfMemoryError" />
     <method v="2">

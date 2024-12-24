@@ -5,17 +5,20 @@ import com.greensopinion.vectorvector.elevation.CachingBlockStore
 import com.greensopinion.vectorvector.elevation.CachingElevationDataStore
 import com.greensopinion.vectorvector.elevation.Degrees
 import com.greensopinion.vectorvector.elevation.FilesystemBlockStore
+import com.greensopinion.vectorvector.metrics.MetricsProvider
 import com.greensopinion.vectorvector.metrics.PeriodicMetrics
 import com.greensopinion.vectorvector.metrics.SingletonMetricsProvider
 import com.greensopinion.vectorvector.sink.CompositeTileSink
 import com.greensopinion.vectorvector.sink.FaultBarrierTileSink
 import com.greensopinion.vectorvector.repository.FilesystemTileRepository
+import com.greensopinion.vectorvector.repository.MbtilesMetadata
 import com.greensopinion.vectorvector.repository.MbtilesTileRepository
 import com.greensopinion.vectorvector.repository.SwitchingTileRepository
 import com.greensopinion.vectorvector.sink.TerrariumSink
 import com.greensopinion.vectorvector.repository.TileRepository
 import com.greensopinion.vectorvector.sink.VectorTileSink
 import com.greensopinion.vectorvector.sink.contour.ContourOptions
+import com.greensopinion.vectorvector.sink.vectorSchema
 import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
 import java.io.File
@@ -51,10 +54,12 @@ fun main(args: Array<String>) {
     val repository: TileRepository = if (options.outputFormat == CliOutputFormat.mbtiles) {
         val extensionToRepository = mutableMapOf<String, TileRepository>()
         if (options.terrarium) {
-            extensionToRepository["png"] = MbtilesTileRepository(File(outputFolder, "terrarium.mbtiles"),metricsProvider)
+            extensionToRepository["png"] =
+                createMbTilesRepository(options, "png", File(outputFolder, "terrarium.mbtiles"), metricsProvider)
         }
         if (options.vector) {
-            extensionToRepository["pbf"] = MbtilesTileRepository(File(outputFolder, "vector.mbtiles"),metricsProvider)
+            extensionToRepository["pbf"] =
+                createMbTilesRepository(options, "pbf", File(outputFolder, "vector.mbtiles"), metricsProvider)
         }
         SwitchingTileRepository(extensionToRepository)
     } else {
@@ -104,6 +109,36 @@ fun main(args: Array<String>) {
         }
     }
 }
+
+fun createMbTilesRepository(
+    options: CliOptions,
+    format: String,
+    file: File,
+    metricsProvider: MetricsProvider
+): TileRepository =
+    MbtilesTileRepository(file, metricsProvider).also { repository ->
+        val contourOptions = ContourOptions()
+        try {
+            repository.setMetadata(
+                MbtilesMetadata(
+                    name = "VectorVector $format tiles",
+                    format = format,
+                    json = if (format == "pbf") vectorSchema(
+                        minZoom = options.minZ,
+                        maxZoom = options.maxZ,
+                        contourLayer = contourOptions.contourLayer,
+                        levelName = contourOptions.levelKey,
+                        elevationName = contourOptions.elevationKey
+                    ) else "",
+                    minZoom = options.minZ,
+                    maxZoom = options.maxZ
+                )
+            )
+        } catch (e: Exception) {
+            repository.close()
+            throw e
+        }
+    }
 
 private fun validateData(options: CliOptions) {
     log.info { "Validating data only" }
