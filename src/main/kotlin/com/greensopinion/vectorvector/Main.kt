@@ -10,14 +10,16 @@ import com.greensopinion.vectorvector.elevation.FilesystemBlockStore
 import com.greensopinion.vectorvector.metrics.MetricsProvider
 import com.greensopinion.vectorvector.metrics.PeriodicMetrics
 import com.greensopinion.vectorvector.metrics.SingletonMetricsProvider
-import com.greensopinion.vectorvector.sink.CompositeTileSink
 import com.greensopinion.vectorvector.repository.FilesystemTileRepository
 import com.greensopinion.vectorvector.repository.MbtilesMetadata
 import com.greensopinion.vectorvector.repository.MbtilesTileRepository
-import com.greensopinion.vectorvector.sink.TerrariumSink
 import com.greensopinion.vectorvector.repository.TileRepository
+import com.greensopinion.vectorvector.sink.CompositeTileSink
+import com.greensopinion.vectorvector.sink.HillshadeRasterSink
+import com.greensopinion.vectorvector.sink.TerrariumSink
 import com.greensopinion.vectorvector.sink.VectorTileSink
 import com.greensopinion.vectorvector.sink.contour.ContourOptions
+import com.greensopinion.vectorvector.sink.hillshade.ResolutionPerPixel
 import com.greensopinion.vectorvector.sink.vectorSchema
 import com.greensopinion.vectorvector.util.closeSafely
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -118,14 +120,24 @@ private fun tileSinkToRepository(
             metricsProvider = metricsProvider
         )] = repository
     }
+    if (options.hillshadeRaster) {
+        val repository = repositoryFactory("hillshade", "png")
+        sinks[HillshadeRasterSink(
+            extent = tileExtent,
+            repository = repository,
+            elevationDataStore = dataStore,
+            resolutionPerPixel = ResolutionPerPixel(tileExtent = tileExtent, minZ = options.minZ, maxZ = options.maxZ),
+            metricsProvider = metricsProvider
+        )] = repository
+    }
     if (options.vector) {
         val repository = repositoryFactory("vector", "pbf")
         sinks[VectorTileSink(
             contourOptionsProvider = { tile ->
                 if (tile.id.z < 9) {
+                    ContourOptions(minorLevel = 200, majorLevel = 1000)
+                } else if (tile.id.z <= 10) {
                     ContourOptions(minorLevel = 100, majorLevel = 200)
-                } else if (tile.id.z < 10) {
-                    ContourOptions(minorLevel = 50, majorLevel = 100)
                 } else if (tile.id.z < 12) {
                     ContourOptions(minorLevel = 20, majorLevel = 100)
                 } else

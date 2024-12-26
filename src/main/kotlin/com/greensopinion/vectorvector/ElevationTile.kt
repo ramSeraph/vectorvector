@@ -14,6 +14,10 @@ value class Elevation(val meters: Double) {
     operator fun compareTo(other: Int): Int {
         return this.meters.compareTo(other)
     }
+    
+    operator fun compareTo(other: Double): Int {
+        return this.meters.compareTo(other)
+    }
 
     override fun toString(): String = "$meters"
 }

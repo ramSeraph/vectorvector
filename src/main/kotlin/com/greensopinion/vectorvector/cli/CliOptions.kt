@@ -66,6 +66,8 @@ enum class CliOutputFormat {
 enum class NamedArea(val bounds: AreaBounds) {
     world(AreaBounds(minZ = 6, maxZ = 12, minX = 0, maxX = 63, minY = 0, maxY = 63)),
     vancouver(AreaBounds(z = 6, x = 10, y = 21, maxZ = 12)),
+    deepcove(AreaBounds(z = 11, x = 324, y = 700, maxZ = 12)),
+    pnw(AreaBounds(minZ = 6, maxZ = 12, minX = 9, maxX = 10, minY = 21, maxY = 22)),
     sanfrancisco(AreaBounds(z = 6, x = 10, y = 24, maxZ = 12)),
     newyork(AreaBounds(z = 6, x = 18, y = 24, maxZ = 12)),
     paris(AreaBounds(z = 6, x = 32, y = 22, maxZ = 12)),

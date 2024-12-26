@@ -17,6 +17,8 @@ class TerrariumSink(
     val elevationDataStore: ElevationDataStore,
     private val metricsProvider: MetricsProvider
 ) : TileSink {
+    private val initialSize = 1024*150
+
     override fun accept(tile: Tile) :Boolean{
         val elevationTile = elevationDataStore.get(tile.id)
         if (elevationTile.empty) {
@@ -50,4 +52,3 @@ class TerrariumSink(
                 (blue and 0xFF)
     }
 }
-private val initialSize = 1024*150
