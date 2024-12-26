@@ -1,4 +1,4 @@
-package com.greensopinion.vectorvector
+package com.greensopinion.vectorvector.cli
 
 import picocli.CommandLine.Option
 import java.io.File
@@ -22,6 +22,9 @@ class CliOptions {
 
     @Option(names = ["--vector"])
     var vector: Boolean = true
+
+    @Option(names = ["--hillshadeRaster"])
+    var hillshadeRaster: Boolean = true
 
     @Option(
         names = ["-f", "--outputFormat"],
