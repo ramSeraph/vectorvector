@@ -12,7 +12,7 @@ class CliOptions {
     var dataDir: File? = null
 
     @Option(names = ["-o", "--output"], required = true, description = ["The directory containing output files."])
-    var outputDir: File? = null
+    var outputDir: File = File(".")
 
     @Option(names = ["--validate"])
     var validateData: Boolean = false

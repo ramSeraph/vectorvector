@@ -14,12 +14,12 @@ import com.greensopinion.vectorvector.sink.CompositeTileSink
 import com.greensopinion.vectorvector.repository.FilesystemTileRepository
 import com.greensopinion.vectorvector.repository.MbtilesMetadata
 import com.greensopinion.vectorvector.repository.MbtilesTileRepository
-import com.greensopinion.vectorvector.repository.SwitchingTileRepository
 import com.greensopinion.vectorvector.sink.TerrariumSink
 import com.greensopinion.vectorvector.repository.TileRepository
 import com.greensopinion.vectorvector.sink.VectorTileSink
 import com.greensopinion.vectorvector.sink.contour.ContourOptions
 import com.greensopinion.vectorvector.sink.vectorSchema
+import com.greensopinion.vectorvector.util.closeSafely
 import io.github.oshai.kotlinlogging.KotlinLogging
 import picocli.CommandLine
 import java.io.File
@@ -35,11 +35,19 @@ fun main(args: Array<String>) {
     }
     val tileExtent = 256
     val blockExtent = 6000
+
     val metricsProvider = SingletonMetricsProvider()
     val dataStore = cachingElevationDataStore(options, blockExtent, tileExtent, metricsProvider)
 
-    tileRepository(options, options.outputDir!!, metricsProvider).use { repository ->
-        val sink = tileSinks(options, tileExtent, repository, dataStore, metricsProvider)
+    val sinkToRepository = tileSinkToRepository(
+        options,
+        tileExtent,
+        dataStore,
+        metricsProvider,
+        tileRepositoryFactory(options, metricsProvider)
+    )
+    try {
+        val sink = CompositeTileSink(sinkToRepository.keys.toList())
         PeriodicMetrics(
             interval = Duration.ofSeconds(30),
             metrics = metricsProvider.metrics
@@ -50,27 +58,27 @@ fun main(args: Array<String>) {
                 sink = sink
             ).process()
         }
+    } finally {
+        closeSafely(sinkToRepository.values)
     }
 }
 
-private fun tileRepository(
+private fun tileRepositoryFactory(
     options: CliOptions,
-    outputFolder: File,
     metricsProvider: SingletonMetricsProvider
-) = if (options.outputFormat == CliOutputFormat.mbtiles) {
-    val extensionToRepository = mutableMapOf<String, TileRepository>()
-    if (options.terrarium) {
-        extensionToRepository["png"] =
-            createMbTilesRepository(options, "png", File(outputFolder, "terrarium.mbtiles"), metricsProvider)
+): (name: String, format: String) -> TileRepository =
+    if (options.outputFormat == CliOutputFormat.mbtiles) {
+        { name, format ->
+            createMbTilesRepository(
+                options,
+                format,
+                File(options.outputDir, "$name.mbtiles"),
+                metricsProvider
+            )
+        }
+    } else {
+        { _, _ -> FilesystemTileRepository(options.outputDir) }
     }
-    if (options.vector) {
-        extensionToRepository["pbf"] =
-            createMbTilesRepository(options, "pbf", File(outputFolder, "vector.mbtiles"), metricsProvider)
-    }
-    SwitchingTileRepository(extensionToRepository)
-} else {
-    FilesystemTileRepository(outputFolder)
-}
 
 private fun cachingElevationDataStore(
     options: CliOptions,
@@ -93,45 +101,43 @@ private fun cachingElevationDataStore(
     )
 )
 
-private fun tileSinks(
+private fun tileSinkToRepository(
     options: CliOptions,
     tileExtent: Int,
-    repository: TileRepository,
     dataStore: CachingElevationDataStore,
-    metricsProvider: SingletonMetricsProvider
-): TileSink {
-    val sinks = mutableListOf<TileSink>()
+    metricsProvider: SingletonMetricsProvider,
+    repositoryFactory: (name: String, format: String) -> TileRepository
+): Map<TileSink, TileRepository> {
+    val sinks = mutableMapOf<TileSink, TileRepository>()
     if (options.terrarium) {
-        sinks.add(
-            TerrariumSink(
-                extent = tileExtent,
-                repository = repository,
-                elevationDataStore = dataStore,
-                metricsProvider = metricsProvider
-            )
-        )
+        val repository = repositoryFactory("terrarium", "png")
+        sinks[TerrariumSink(
+            extent = tileExtent,
+            repository = repository,
+            elevationDataStore = dataStore,
+            metricsProvider = metricsProvider
+        )] = repository
     }
     if (options.vector) {
-        sinks.add(
-            VectorTileSink(
-                contourOptionsProvider = { tile ->
-                    if (tile.id.z < 9) {
-                        ContourOptions(minorLevel = 100, majorLevel = 200)
-                    } else if (tile.id.z < 10) {
-                        ContourOptions(minorLevel = 50, majorLevel = 100)
-                    } else if (tile.id.z < 12) {
-                        ContourOptions(minorLevel = 20, majorLevel = 100)
-                    } else
-                        ContourOptions(minorLevel = 10, majorLevel = 50)
-                },
-                repository = repository,
-                elevationDataStore = dataStore,
-                metricsProvider = metricsProvider
-            )
-        )
+        val repository = repositoryFactory("vector", "pbf")
+        sinks[VectorTileSink(
+            contourOptionsProvider = { tile ->
+                if (tile.id.z < 9) {
+                    ContourOptions(minorLevel = 100, majorLevel = 200)
+                } else if (tile.id.z < 10) {
+                    ContourOptions(minorLevel = 50, majorLevel = 100)
+                } else if (tile.id.z < 12) {
+                    ContourOptions(minorLevel = 20, majorLevel = 100)
+                } else
+                    ContourOptions(minorLevel = 10, majorLevel = 50)
+            },
+            repository = repository,
+            elevationDataStore = dataStore,
+            metricsProvider = metricsProvider
+        )] = repository
     }
     require(sinks.isNotEmpty()) { "No outputs specified, nothing to do!" }
-    return CompositeTileSink(sinks)
+    return sinks
 }
 
 fun createMbTilesRepository(
