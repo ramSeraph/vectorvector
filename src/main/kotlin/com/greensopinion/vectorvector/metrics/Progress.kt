@@ -15,6 +15,7 @@ class Progress(
     private val processed = AtomicInteger()
 
     private val start = Instant.now()
+    val elapsed: Duration get() = Duration.between(start, Instant.now())
 
     @Volatile
     private var last = start
@@ -35,7 +36,7 @@ class Progress(
     }
 
     private fun logEstimate() {
-        val elapsed = Duration.between(start, Instant.now())
+        val elapsed = this.elapsed
         val completed = this.completed.get()
         val processed = this.processed.get()
         val remaining = total - completed
@@ -53,9 +54,9 @@ class Progress(
     }
 }
 
-private fun Duration.toLogString() : String {
+fun Duration.toLogString(): String {
     val days = this.toDays()
     val hours = (this - Duration.ofDays(days)).toHours()
-    val minutes = (this - Duration.ofDays(days)-Duration.ofHours(hours)).toMinutes()
+    val minutes = (this - Duration.ofDays(days) - Duration.ofHours(hours)).toMinutes()
     return "$days days $hours hours $minutes minutes"
 }

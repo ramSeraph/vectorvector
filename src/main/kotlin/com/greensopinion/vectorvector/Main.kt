@@ -155,6 +155,7 @@ private fun validateData(options: CliOptions) {
 private fun parseCommandLine(args: Array<String>): CliOptions {
     val options = CliOptions();
     CommandLine(options).parseArgs(*args)
+    options.area?.bounds?.applyTo(options)
     return options
 }
 
