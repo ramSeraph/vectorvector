@@ -135,7 +135,7 @@ private fun tileSinkToRepository(
         sinks[VectorTileSink(
             contourOptionsProvider = { tile ->
                 if (tile.id.z < 9) {
-                    ContourOptions(minorLevel = 200, majorLevel = 1000)
+                    ContourOptions(minorLevel = 500, majorLevel = 1000)
                 } else if (tile.id.z <= 10) {
                     ContourOptions(minorLevel = 100, majorLevel = 200)
                 } else if (tile.id.z < 12) {
