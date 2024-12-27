@@ -1,7 +1,7 @@
 ## VectorVector
 
 VectorVector provides tooling for vectorizing the planet.
-Produces contour tiles and terrarium tiles from a elevation data.
+Produces contour tiles, hillshade and terrarium tiles from an elevation data set.
 
 ## Why
 
