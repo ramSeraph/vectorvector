@@ -59,8 +59,6 @@ class HornAlgorithmTest {
     }
 
     private fun horn(elevation: (x: Int, y: Int) -> Double): HornAlgorithm {
-        println("0,0 => ${elevation(0, 0)}")
-        println("255,255 => ${elevation(255, 255)}")
         val tile = mockTile(elevation)
         val dataStore = mock<ElevationDataStore>().also {
             doReturn(EmptyTile(tile.extent)).whenever(it).get(any())
