@@ -5,6 +5,8 @@ Produces contour tiles, hillshade and terrarium tiles from an elevation data set
 
 ## Features
 
+Provides a command-line tool for generating slippy map tiles from elevation data.
+
 ### Tile Outputs
 
 * **Hillshade** - raster hillshade using the Horn Algorithm[^1]
