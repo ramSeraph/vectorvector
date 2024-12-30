@@ -3,17 +3,6 @@
 VectorVector provides tooling for vectorizing the planet.
 Produces contour tiles, hillshade and terrarium tiles from an elevation data set.
 
-## Why
-
-VectorVector is an experiment to see if we can produce high quality tiles for the whole planet in a few hours.
-
-Goals:
-
-* high degree of customizability
-* high quality output
-* can generate the planet in < 6 hours on consumer hardware
-* optimal development experience with a fast feedback loop
-
 ## Features
 
 ### Tile Outputs
@@ -54,6 +43,17 @@ Chip:	Apple M2 Max
 Total Number of Cores: 12 (8 performance and 4 efficiency)
 Memory: 64 GB
 ```
+
+## Why
+
+VectorVector is an experiment to see if we can produce high quality tiles for the whole planet in a few hours.
+
+Goals:
+
+* high degree of customizability
+* high quality output
+* can generate the planet in < 6 hours on consumer hardware
+* optimal development experience with a fast feedback loop
 
 ## License
 
