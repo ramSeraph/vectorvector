@@ -1,29 +1,47 @@
 package com.greensopinion.vectorvector.cli
 
+import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
 
+@Command(name = "java --jar vectorvector-cli.jar")
 class CliOptions {
     @Option(
         names = ["-d", "--data"],
         required = true,
-        description = ["The data directory containing elevation data in tiff format."]
+        description = ["The data directory containing elevation data in GeoTIFF format."]
     )
     var dataDir: File? = null
 
-    @Option(names = ["-o", "--output"], required = true, description = ["The directory containing output files."])
+    @Option(
+        names = ["-o", "--output"],
+        required = true,
+        description = ["Specifies the directory where the generated output files will be saved. Defaults to \${DEFAULT-VALUE}"]
+    )
     var outputDir: File = File(".")
 
-    @Option(names = ["--validate"])
+    @Option(
+        names = ["--validate"],
+        description = [" Validates the elevation data can be read before generating tiles. The command exits without generating output if validation fails. Defaults to \${DEFAULT-VALUE}"]
+    )
     var validateData: Boolean = false
 
-    @Option(names = ["--terrarium"])
+    @Option(
+        names = ["--terrarium"],
+        description = ["Generates Terrarium-style raster tiles, commonly used for rendering 3D-like terrain features. Defaults to \${DEFAULT-VALUE}"]
+    )
     var terrarium: Boolean = false
 
-    @Option(names = ["--vector"])
+    @Option(
+        names = ["--vector"],
+        description = ["Generates vector tiles with contour lines. Defaults to \${DEFAULT-VALUE}"]
+    )
     var vector: Boolean = true
 
-    @Option(names = ["--hillshadeRaster"])
+    @Option(
+        names = ["--hillshadeRaster"],
+        description = ["Generates hillshade raster tiles, which simulate the shading effects of the sun on the terrain to enhance visual representation of elevation data. Defaults to \${DEFAULT-VALUE}"]
+    )
     var hillshadeRaster: Boolean = true
 
     @Option(
@@ -39,23 +57,44 @@ class CliOptions {
     )
     var area: NamedArea? = null
 
-    @Option(names = ["-minZ"])
+    @Option(
+        names = ["-minZ"],
+        description = ["The minimum zoom level for which tiles are generated. Defaults to \${DEFAULT-VALUE}"]
+    )
     var minZ: Int = NamedArea.world.bounds.minZ
 
-    @Option(names = ["-maxZ"])
+    @Option(
+        names = ["-maxZ"],
+        description = ["The maximum zoom level for which tiles are generated. Defaults to \${DEFAULT-VALUE}"]
+    )
     var maxZ: Int = NamedArea.world.bounds.maxZ
 
-    @Option(names = ["-minX"])
+    @Option(
+        names = ["-minX"],
+        description = ["Specifies the minimum longitude (X coordinate) for the tile area at the minZ zoom level. Defaults to \${DEFAULT-VALUE}"]
+    )
     var minX: Int = NamedArea.world.bounds.maxX
 
-    @Option(names = ["-maxX"])
+    @Option(
+        names = ["-maxX"],
+        description = ["Specifies the maximum longitude (X coordinate) for the tile area at the minZ zoom level. Defaults to \${DEFAULT-VALUE}"]
+    )
     var maxX: Int = NamedArea.world.bounds.maxX
 
-    @Option(names = ["-minY"])
+    @Option(
+        names = ["-minY"],
+        description = ["Specifies the minimum latitude (Y coordinate) for the tile area at the minZ zoom level. Defaults to \${DEFAULT-VALUE}"]
+    )
     var minY: Int = NamedArea.world.bounds.minY
 
-    @Option(names = ["-maxY"])
+    @Option(
+        names = ["-maxY"],
+        description = ["Specifies the maximum latitude (Y coordinate) for the tile area at the minZ zoom level. Defaults to \${DEFAULT-VALUE}"]
+    )
     var maxY: Int = NamedArea.world.bounds.maxY
+
+    @Option(names = ["-h", "--help"], usageHelp = true, description = ["display this help message"])
+    var help = false
 }
 
 enum class CliOutputFormat {

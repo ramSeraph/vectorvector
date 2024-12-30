@@ -31,9 +31,12 @@ private val log = KotlinLogging.logger { }
 
 fun main(args: Array<String>) {
     val options = parseCommandLine(args)
+    if (options.help) {
+        CommandLine.usage(CliOptions(), System.out)
+        return
+    }
     if (options.validateData) {
         validateData(options)
-        return
     }
     val tileExtent = 256
     val blockExtent = 6000
@@ -183,7 +186,7 @@ fun createMbTilesRepository(
     }
 
 private fun validateData(options: CliOptions) {
-    log.info { "Validating data only" }
+    log.info { "Validating data" }
     val metricsProvider = SingletonMetricsProvider()
     val blockStore = FilesystemBlockStore(
         blockExtent = 6000,
@@ -191,7 +194,7 @@ private fun validateData(options: CliOptions) {
         metricsProvider
     )
     blockStore.validateAll()
-    log.info { "Done" }
+    log.info { "Done data validation" }
 }
 
 private fun parseCommandLine(args: Array<String>): CliOptions {

@@ -17,6 +17,80 @@ Produces contour tiles, hillshade and terrarium tiles from an elevation data set
 * SRTM[^4] elevation data in GeoTIFF[^5] format. Tested using data
   from [srtm.csi.cgiar.org](https://srtm.csi.cgiar.org/)
 
+## Build
+
+To build the package, use the following command:
+
+```shell
+$ mvn package
+```
+
+The build creates a jar with all dependencies in `target/vectorvector-cli.jar`
+
+## Usage
+
+Sample usage:
+
+```shell
+$ java -jar target/vectorvector-cli.jar --outputFormat files --data elevation/data/tif --output elevation/output --area pnw --vector=true --hillshadeRaster=true   
+```
+
+In this example `pnw` refers to the Pacific Northwest
+
+Running with `--help` will generate usage help:
+
+```txt
+java -jar target/vectorvector-cli.jar  --help
+Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
+                                       [--validate] [--vector] [--area=<area>]
+                                       -d=<dataDir> -f=<outputFormat>
+                                       [-maxX=<maxX>] [-maxY=<maxY>]
+                                       [-maxZ=<maxZ>] [-minX=<minX>]
+                                       [-minY=<minY>] [-minZ=<minZ>]
+                                       -o=<outputDir>
+      --area=<area>          The name of an area, which specifies a bounds.
+                               Must be one of wholeworld, world, northamerica,
+                               southamerica, europe, vancouver, deepcove, pnw,
+                               sanfrancisco, newyork, paris, rome, tokyo, palma
+  -d, --data=<dataDir>       The data directory containing elevation data in
+                               GeoTIFF format.
+  -f, --outputFormat=<outputFormat>
+                             The format of the output, must be one of files,
+                               mbtiles
+  -h, --help                 display this help message
+      --hillshadeRaster      Generates hillshade raster tiles, which simulate
+                               the shading effects of the sun on the terrain to
+                               enhance visual representation of elevation data.
+                               Defaults to true
+      -maxX=<maxX>           Specifies the maximum longitude (X coordinate) for
+                               the tile area at the minZ zoom level. Defaults
+                               to 63
+      -maxY=<maxY>           Specifies the maximum latitude (Y coordinate) for
+                               the tile area at the minZ zoom level. Defaults
+                               to 43
+      -maxZ=<maxZ>           The maximum zoom level for which tiles are
+                               generated. Defaults to 12
+      -minX=<minX>           Specifies the minimum longitude (X coordinate) for
+                               the tile area at the minZ zoom level. Defaults
+                               to 63
+      -minY=<minY>           Specifies the minimum latitude (Y coordinate) for
+                               the tile area at the minZ zoom level. Defaults
+                               to 13
+      -minZ=<minZ>           The minimum zoom level for which tiles are
+                               generated. Defaults to 6
+  -o, --output=<outputDir>   Specifies the directory where the generated output
+                               files will be saved. Defaults to .
+      --terrarium            Generates Terrarium-style raster tiles, commonly
+                               used for rendering 3D-like terrain features.
+                               Defaults to false
+      --validate              Validates the elevation data can be read before
+                               generating tiles. The command exits without
+                               generating output if validation fails. Defaults
+                               to false
+      --vector               Generates vector tiles with contour lines.
+                               Defaults to true
+```
+
 ## Benchmark
 
 Vector contour lines and raster hillshade for the world completed in 6 hours 51 minutes.

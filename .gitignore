@@ -4,6 +4,8 @@
 
 /.mvn/*.properties
 /.mvn/wrapper/
+/dependency-reduced-pom.xml
+
 ### IntelliJ IDEA ###
 /.idea
 *.iws
