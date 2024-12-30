@@ -279,6 +279,14 @@ Goals:
 * optimal development experience with a fast feedback loop
 * facilitate learning about mapping and algorithms
 
+### See Also
+
+The following tools and libraries provide complimentary functionality:
+
+* [protomaps](https://github.com/protomaps)
+* [planetiler](https://github.com/onthegomap/planetiler)
+* [tippecanoe](https://github.com/felt/tippecanoe)
+
 ## Alternatives
 
 The following tools and libraries are more mature,
@@ -292,13 +300,6 @@ have more features and may be more suited to your use-case:
   analysis platform"
 * [github.com/nst-guide/terrain](https://github.com/nst-guide/terrain) "Generate contours, hillshade, Terrain RGB,
   slope-angle shading tiles from elevation data."
-
-### Adjacent
-
-The following tools and libraries provide complimentary functionality:
-
-* [planetiler](https://github.com/onthegomap/planetiler)
-* [tippecanoe](https://github.com/felt/tippecanoe)
 
 ## License
 
