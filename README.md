@@ -43,11 +43,12 @@ Running with `--help` will generate usage help:
 java -jar target/vectorvector-cli.jar  --help
 Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
                                        [--validate] [--vector] [-a=<area>]
-                                       -d=<dataDir> -f=<outputFormat>
-                                       [-maxX=<maxX>] [-maxY=<maxY>]
-                                       [-maxZ=<maxZ>] [-minX=<minX>]
-                                       [-minY=<minY>] [-minZ=<minZ>]
-                                       -o=<outputDir>
+                                       -d=<dataDir>
+                                       [--epsilon=<contourEpsilon>]
+                                       -f=<outputFormat> [-maxX=<maxX>]
+                                       [-maxY=<maxY>] [-maxZ=<maxZ>]
+                                       [-minX=<minX>] [-minY=<minY>]
+                                       [-minZ=<minZ>] -o=<outputDir>
   -a, --area=<area>          The name of an area, which specifies a bounds for
                                tile generation (minZ, maxZ, minX, maxX, minY,
                                maxY). If specified, the area supersedes all
@@ -57,6 +58,14 @@ Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
                                rome, tokyo, palma
   -d, --data=<dataDir>       The data directory containing elevation data in
                                GeoTIFF format.
+      --epsilon=<contourEpsilon>
+                             Specifies the epsilon value to apply to contour
+                               lines for reducing the number of points using
+                               the Ramer–Douglas–Peucker algorithm. A higher
+                               value simplifies the lines more by removing
+                               points, while a lower value retains more detail.
+                               The default value is 3. Set to 0 to disable line
+                               simplification.
   -f, --outputFormat=<outputFormat>
                              The format of the output, must be one of files,
                                mbtiles

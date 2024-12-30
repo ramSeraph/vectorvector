@@ -8,7 +8,9 @@ package com.greensopinion.vectorvector.sink.contour
 class LineSimplifier(
     private val epsilon: Double
 ) {
-    fun simplify(line: Line): Line {
+    fun simplify(line: Line): Line = reduceWithRdp(line)
+
+    private fun reduceWithRdp(line: Line): Line {
         if (line.points.size <= 2) {
             return line
         }
@@ -25,8 +27,8 @@ class LineSimplifier(
         }
 
         if (maxDistance > epsilon) {
-            val left = simplify(Line(line.points.take(index + 1)))
-            val right = simplify(Line(line.points.drop(index)))
+            val left = reduceWithRdp(Line(line.points.take(index + 1)))
+            val right = reduceWithRdp(Line(line.points.drop(index)))
             return Line(left.points.dropLast(1) + right.points)
         } else {
             return Line(listOf(line.points.first(), line.points.last()))

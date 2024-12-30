@@ -8,6 +8,7 @@ import com.greensopinion.vectorvector.repository.TileRepository
 import com.greensopinion.vectorvector.sink.contour.ContourLineGenerator
 import com.greensopinion.vectorvector.sink.contour.ContourOptions
 import com.greensopinion.vectorvector.sink.contour.ContourVectorTileMapper
+import com.greensopinion.vectorvector.sink.contour.LineSimplifier
 import vector_tile.VectorTile
 
 class VectorTileSink(
@@ -22,9 +23,15 @@ class VectorTileSink(
             return false
         }
         val contourOptions = contourOptionsProvider(tile)
-        val linesByElevation = ContourLineGenerator(contourOptions, elevationDataStore).generate(tile.id)
+        var linesByElevation = ContourLineGenerator(contourOptions, elevationDataStore).generate(tile.id)
         if (linesByElevation.isEmpty()) {
             return false
+        }
+        val epsilon = contourOptions.epsilon?.toDouble()
+        if (epsilon != null && epsilon > 0.0) {
+            linesByElevation = linesByElevation.map {
+                Pair(it.key, it.value.map { line -> LineSimplifier(epsilon).simplify(line) })
+            }.toMap()
         }
         val vectorTile = VectorTile.Tile.newBuilder().addLayers(
             ContourVectorTileMapper(contourOptions, linesByElevation).apply()

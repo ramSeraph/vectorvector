@@ -135,16 +135,17 @@ private fun tileSinkToRepository(
     }
     if (options.vector) {
         val repository = repositoryFactory("vector", "pbf")
+        val baseOptions = ContourOptions(minorLevel = 10, majorLevel = 50, epsilon = options.contourEpsilon)
         sinks[VectorTileSink(
             contourOptionsProvider = { tile ->
                 if (tile.id.z < 9) {
-                    ContourOptions(minorLevel = 500, majorLevel = 1000)
+                    baseOptions.copy(minorLevel = 500, majorLevel = 1000)
                 } else if (tile.id.z <= 10) {
-                    ContourOptions(minorLevel = 100, majorLevel = 200)
+                    baseOptions.copy(minorLevel = 100, majorLevel = 200)
                 } else if (tile.id.z < 12) {
-                    ContourOptions(minorLevel = 20, majorLevel = 100)
+                    baseOptions.copy(minorLevel = 20, majorLevel = 100)
                 } else
-                    ContourOptions(minorLevel = 10, majorLevel = 50)
+                    baseOptions
             },
             repository = repository,
             elevationDataStore = dataStore,

@@ -95,6 +95,12 @@ class CliOptions {
 
     @Option(names = ["-h", "--help"], usageHelp = true, description = ["display this help message"])
     var help = false
+
+    @Option(
+        names = ["--epsilon"],
+        description = ["Specifies the epsilon value to apply to contour lines for reducing the number of points using the Ramer–Douglas–Peucker algorithm. A higher value simplifies the lines more by removing points, while a lower value retains more detail. The default value is \${DEFAULT-VALUE}. Set to 0 to disable line simplification."]
+    )
+    var contourEpsilon: Int = 3
 }
 
 enum class CliOutputFormat {

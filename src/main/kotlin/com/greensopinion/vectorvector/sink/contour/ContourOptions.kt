@@ -1,6 +1,6 @@
 package com.greensopinion.vectorvector.sink.contour
 
-class ContourOptions(
+data class ContourOptions(
     /** Factor to scale elevation meters, to support different units */
     val multiplier: Double = 1.0,
 
@@ -27,5 +27,7 @@ class ContourOptions(
     val majorLevel: Int = 200,
 
     /** The minimum level, exclusive, to include in contour lines */
-    val minLevelExclusive: Int = 0
+    val minLevelExclusive: Int = 0,
+    /** The epsilon to apply with the Ramer–Douglas–Peucker algorithm, used to reduce points in contour lines. */
+    val epsilon: Int? = null
 )
