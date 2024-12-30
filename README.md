@@ -156,6 +156,8 @@ Memory: 64 GB
 
 Vector styling included the following for hillshade and contour lines:
 
+<details><summary>(click to expand JSON style)</summary>
+
 ```json
 
 {
@@ -266,6 +268,8 @@ Vector styling included the following for hillshade and contour lines:
   ]
 }
 ```
+
+</details>
 
 ## Why
 
