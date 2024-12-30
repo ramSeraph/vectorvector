@@ -9,7 +9,7 @@ private val metricsProvider = SingletonMetricsProvider()
 val testBlockStore = CachingBlockStore(
     FilesystemBlockStore(
         blockExtent = 6000,
-        folder = File("../../data/tif"),
+        folder = File("data/tif"),
         metricsProvider
     ),
     metricsProvider
