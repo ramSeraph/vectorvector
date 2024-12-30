@@ -52,8 +52,8 @@ class CliOptions {
     var outputFormat: CliOutputFormat? = null
 
     @Option(
-        names = ["--area"],
-        description = ["The name of an area, which specifies a bounds. Must be one of \${COMPLETION-CANDIDATES}"]
+        names = ["-a", "--area"],
+        description = ["The name of an area, which specifies a bounds for tile generation (minZ, maxZ, minX, maxX, minY, maxY). If specified, the area supersedes all Z/X/Y options. Must be one of \${COMPLETION-CANDIDATES}"]
     )
     var area: NamedArea? = null
 

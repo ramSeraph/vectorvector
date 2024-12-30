@@ -42,16 +42,19 @@ Running with `--help` will generate usage help:
 ```txt
 java -jar target/vectorvector-cli.jar  --help
 Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
-                                       [--validate] [--vector] [--area=<area>]
+                                       [--validate] [--vector] [-a=<area>]
                                        -d=<dataDir> -f=<outputFormat>
                                        [-maxX=<maxX>] [-maxY=<maxY>]
                                        [-maxZ=<maxZ>] [-minX=<minX>]
                                        [-minY=<minY>] [-minZ=<minZ>]
                                        -o=<outputDir>
-      --area=<area>          The name of an area, which specifies a bounds.
-                               Must be one of wholeworld, world, northamerica,
-                               southamerica, europe, vancouver, deepcove, pnw,
-                               sanfrancisco, newyork, paris, rome, tokyo, palma
+  -a, --area=<area>          The name of an area, which specifies a bounds for
+                               tile generation (minZ, maxZ, minX, maxX, minY,
+                               maxY). If specified, the area supersedes all
+                               Z/X/Y options. Must be one of wholeworld, world,
+                               northamerica, southamerica, europe, vancouver,
+                               deepcove, pnw, sanfrancisco, newyork, paris,
+                               rome, tokyo, palma
   -d, --data=<dataDir>       The data directory containing elevation data in
                                GeoTIFF format.
   -f, --outputFormat=<outputFormat>
