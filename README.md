@@ -136,10 +136,25 @@ VectorVector is an experiment to see if we can produce high quality tiles for th
 
 Goals:
 
-* high degree of customizability
 * high quality output
 * can generate the planet in < 6 hours on consumer hardware
+* high degree of customizability
 * optimal development experience with a fast feedback loop
+* facilitate learning about mapping and algorithms
+
+## Alternatives
+
+The following tools and libraries are more mature,
+have more features and may be more suited to your use-case:
+
+* QGIS [github.com/qgis/QGIS](https://github.com/qgis/QGIS)
+* GDAL (Geospatial Data Abstraction Library) [github.com/OSGeo/GDAL](https://github.com/OSGeo/GDAL)
+* GRASS GIS [github.com/OSGeo/grass](https://github.com/OSGeo/grass)
+* SAGA GIS [sourceforge.net/projects/saga-gis/](https://sourceforge.net/projects/saga-gis/)
+* [github.com/jblindsay/whitebox-tools](https://github.com/jblindsay/whitebox-tools) "An advanced geospatial data
+  analysis platform"
+* [github.com/nst-guide/terrain](https://github.com/nst-guide/terrain) "Generate contours, hillshade, Terrain RGB,
+  slope-angle shading tiles from elevation data."
 
 ## License
 
