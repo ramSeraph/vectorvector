@@ -132,6 +132,123 @@ Total Number of Cores: 12 (8 performance and 4 efficiency)
 Memory: 64 GB
 ```
 
+## Example
+
+![example](doc/contour-hillshade-example.jpeg)
+
+Vector styling included the following for hillshade and contour lines:
+
+```json
+
+{
+  "layers": [
+    {
+      "id": "hillshade",
+      "type": "raster",
+      "source": "hillshade",
+      "source-layer": "hillshade",
+      "minzoom": 6,
+      "maxzoom": 15,
+      "paint": {
+        "raster-opacity": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          6,
+          0.8,
+          11,
+          0.4,
+          14,
+          0.2,
+          15,
+          0.1
+        ]
+      }
+    },
+    {
+      "id": "contour_major",
+      "type": "line",
+      "source": "contour",
+      "source-layer": "contours",
+      "minzoom": 9,
+      "maxzoom": 15,
+      "filter": [
+        "all",
+        [
+          ">",
+          "ele",
+          10
+        ],
+        [
+          "==",
+          "level",
+          1
+        ]
+      ],
+      "paint": {
+        "line-color": "#66bb6a",
+        "line-width": {
+          "stops": [
+            [
+              12,
+              0.5
+            ],
+            [
+              13,
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "contour_medium",
+      "type": "line",
+      "source": "contour",
+      "source-layer": "contours",
+      "minzoom": 9,
+      "maxzoom": 15,
+      "filter": [
+        "all",
+        [
+          ">",
+          "ele",
+          10
+        ],
+        [
+          "==",
+          "level",
+          0
+        ]
+      ],
+      "paint": {
+        "line-color": "#81c784",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              0.25
+            ],
+            [
+              11,
+              0.5
+            ],
+            [
+              16,
+              1
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
 ## Why
 
 VectorVector is an experiment to see if we can produce high quality tiles for the whole planet in a few hours.
@@ -157,6 +274,13 @@ have more features and may be more suited to your use-case:
   analysis platform"
 * [github.com/nst-guide/terrain](https://github.com/nst-guide/terrain) "Generate contours, hillshade, Terrain RGB,
   slope-angle shading tiles from elevation data."
+
+### Adjacent
+
+The following tools and libraries provide complimentary functionality:
+
+* [planetiler](https://github.com/onthegomap/planetiler)
+* [tippecanoe](https://github.com/felt/tippecanoe)
 
 ## License
 
