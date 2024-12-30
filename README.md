@@ -19,6 +19,127 @@ Provides a command-line tool for generating slippy map tiles from elevation data
 * SRTM[^4] elevation data in GeoTIFF[^5] format. Tested using data
   from [srtm.csi.cgiar.org](https://srtm.csi.cgiar.org/)
 
+## Example
+
+![example](doc/contour-hillshade-example.jpeg)
+
+Vector styling included the following for hillshade and contour lines:
+
+<details><summary>(click to expand JSON style)</summary>
+
+```json
+
+{
+  "layers": [
+    {
+      "id": "hillshade",
+      "type": "raster",
+      "source": "hillshade",
+      "source-layer": "hillshade",
+      "minzoom": 6,
+      "maxzoom": 15,
+      "paint": {
+        "raster-opacity": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          6,
+          0.8,
+          11,
+          0.4,
+          14,
+          0.2,
+          15,
+          0.1
+        ]
+      }
+    },
+    {
+      "id": "contour_major",
+      "type": "line",
+      "source": "contour",
+      "source-layer": "contours",
+      "minzoom": 9,
+      "maxzoom": 15,
+      "filter": [
+        "all",
+        [
+          ">",
+          "ele",
+          10
+        ],
+        [
+          "==",
+          "level",
+          1
+        ]
+      ],
+      "paint": {
+        "line-color": "#66bb6a",
+        "line-width": {
+          "stops": [
+            [
+              12,
+              0.5
+            ],
+            [
+              13,
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "contour_medium",
+      "type": "line",
+      "source": "contour",
+      "source-layer": "contours",
+      "minzoom": 9,
+      "maxzoom": 15,
+      "filter": [
+        "all",
+        [
+          ">",
+          "ele",
+          10
+        ],
+        [
+          "==",
+          "level",
+          0
+        ]
+      ],
+      "paint": {
+        "line-color": "#81c784",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              0.25
+            ],
+            [
+              11,
+              0.5
+            ],
+            [
+              16,
+              1
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+</details>
+
 ## Build
 
 To build the package, use the following command:
@@ -149,127 +270,6 @@ Chip:	Apple M2 Max
 Total Number of Cores: 12 (8 performance and 4 efficiency)
 Memory: 64 GB
 ```
-
-## Example
-
-![example](doc/contour-hillshade-example.jpeg)
-
-Vector styling included the following for hillshade and contour lines:
-
-<details><summary>(click to expand JSON style)</summary>
-
-```json
-
-{
-  "layers": [
-    {
-      "id": "hillshade",
-      "type": "raster",
-      "source": "hillshade",
-      "source-layer": "hillshade",
-      "minzoom": 6,
-      "maxzoom": 15,
-      "paint": {
-        "raster-opacity": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "zoom"
-          ],
-          6,
-          0.8,
-          11,
-          0.4,
-          14,
-          0.2,
-          15,
-          0.1
-        ]
-      }
-    },
-    {
-      "id": "contour_major",
-      "type": "line",
-      "source": "contour",
-      "source-layer": "contours",
-      "minzoom": 9,
-      "maxzoom": 15,
-      "filter": [
-        "all",
-        [
-          ">",
-          "ele",
-          10
-        ],
-        [
-          "==",
-          "level",
-          1
-        ]
-      ],
-      "paint": {
-        "line-color": "#66bb6a",
-        "line-width": {
-          "stops": [
-            [
-              12,
-              0.5
-            ],
-            [
-              13,
-              1
-            ]
-          ]
-        }
-      }
-    },
-    {
-      "id": "contour_medium",
-      "type": "line",
-      "source": "contour",
-      "source-layer": "contours",
-      "minzoom": 9,
-      "maxzoom": 15,
-      "filter": [
-        "all",
-        [
-          ">",
-          "ele",
-          10
-        ],
-        [
-          "==",
-          "level",
-          0
-        ]
-      ],
-      "paint": {
-        "line-color": "#81c784",
-        "line-width": {
-          "stops": [
-            [
-              10,
-              0.25
-            ],
-            [
-              11,
-              0.5
-            ],
-            [
-              16,
-              1
-            ]
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-
-</details>
 
 ## Why
 
