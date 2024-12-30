@@ -105,6 +105,24 @@ Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
                                Defaults to true
 ```
 
+### Disk Space
+
+Approximate disk space requirements:
+
+* GeoTIFF elevation data of the planet: 59G
+* mbtiles output (vector and hillshade): 67G
+
+You'll need a total of about 126 GB free space before starting, or about 200 GB if you're also generating pmtiles.
+
+### Alternate Formats
+
+To convert mbtiles to [pmtiles](https://docs.protomaps.com/pmtiles/):
+
+```sh
+$ brew install pmtiles
+$ pmtiles convert world-hillshade.mbtiles world-hillshade.pmtiles
+```
+
 ## Benchmark
 
 Vector contour lines and raster hillshade for the world completed in 6 hours 51 minutes.
