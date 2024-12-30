@@ -167,7 +167,7 @@ fun createMbTilesRepository(
         try {
             repository.setMetadata(
                 MbtilesMetadata(
-                    name = "VectorVector $format tiles",
+                    name = "vectorvector $format tiles",
                     format = format,
                     json = if (format == "pbf") vectorSchema(
                         minZoom = options.minZ,

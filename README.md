@@ -1,6 +1,6 @@
-## VectorVector
+## vectorvector
 
-VectorVector provides tooling for vectorizing the planet.
+vectorvector provides tooling for vectorizing the planet.
 Produces contour tiles, hillshade and terrarium tiles from an elevation data set.
 
 ## Features
@@ -269,7 +269,7 @@ Vector styling included the following for hillshade and contour lines:
 
 ## Why
 
-VectorVector is an experiment to see if we can produce high quality tiles for the whole planet in a few hours.
+vectorvector is an experiment to see if we can produce high quality tiles for the whole planet in a few hours.
 
 Goals:
 
