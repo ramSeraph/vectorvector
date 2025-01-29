@@ -16,8 +16,10 @@ class SingleVectorTileIT {
     val sink = VectorTileSink(
         contourOptionsProvider = { ContourOptions(minorLevel = 20, majorLevel = 100) },
         elevationDataStore = BlockElevationDataStore(
-            blockSize = Degrees(5.0),
-            blockExtent = 6000,
+            SrtmBlockMapper(
+                blockSize = Degrees(5.0),
+                blockExtent = 6000,
+            ),
             tileExtent = tileExtent,
             blockStore = testBlockStore
         ),

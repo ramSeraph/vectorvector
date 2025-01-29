@@ -2,11 +2,18 @@ package com.greensopinion.vectorvector
 
 import com.greensopinion.vectorvector.cli.CliOptions
 import com.greensopinion.vectorvector.cli.CliOutputFormat
+import com.greensopinion.vectorvector.cli.DataSourceFormat
+import com.greensopinion.vectorvector.elevation.Aw3d30ElevationDataStore
 import com.greensopinion.vectorvector.elevation.BlockElevationDataStore
+import com.greensopinion.vectorvector.elevation.BlockOffsetMapper
+import com.greensopinion.vectorvector.elevation.BlockStore
 import com.greensopinion.vectorvector.elevation.CachingBlockStore
 import com.greensopinion.vectorvector.elevation.CachingElevationDataStore
+import com.greensopinion.vectorvector.elevation.DegreeBlockMapper
 import com.greensopinion.vectorvector.elevation.Degrees
-import com.greensopinion.vectorvector.elevation.FilesystemBlockStore
+import com.greensopinion.vectorvector.elevation.ElevationDataStore
+import com.greensopinion.vectorvector.elevation.SrtmBlockMapper
+import com.greensopinion.vectorvector.elevation.SrtmBlockStore
 import com.greensopinion.vectorvector.metrics.MetricsProvider
 import com.greensopinion.vectorvector.metrics.PeriodicMetrics
 import com.greensopinion.vectorvector.metrics.SingletonMetricsProvider
@@ -35,18 +42,11 @@ fun main(args: Array<String>) {
         CommandLine.usage(CliOptions(), System.out)
         return
     }
-    if (options.validateData) {
-        validateData(options)
-    }
-    val tileExtent = 256
-    val blockExtent = 6000
-
     val metricsProvider = SingletonMetricsProvider()
-    val dataStore = cachingElevationDataStore(options, blockExtent, tileExtent, metricsProvider)
+    val dataStore = cachingElevationDataStore(options, metricsProvider)
 
     val sinkToRepository = tileSinkToRepository(
         options,
-        tileExtent,
         dataStore,
         metricsProvider,
         tileRepositoryFactory(options, metricsProvider)
@@ -87,32 +87,51 @@ private fun tileRepositoryFactory(
 
 private fun cachingElevationDataStore(
     options: CliOptions,
-    blockExtent: Int,
-    tileExtent: Int,
     metricsProvider: SingletonMetricsProvider
-) = CachingElevationDataStore(
-    BlockElevationDataStore(
-        blockSize = Degrees(5.0),
-        blockExtent = blockExtent,
-        tileExtent = tileExtent,
-        blockStore = CachingBlockStore(
-            FilesystemBlockStore(
-                blockExtent = blockExtent,
-                folder = options.dataDir!!,
-                metricsProvider = metricsProvider
-            ),
-            metricsProvider
+): ElevationDataStore {
+    val blockSize: Degrees
+    val blockMapper: BlockOffsetMapper
+    val store: BlockStore
+    val cacheSize: Long
+    if (options.dataFormat == DataSourceFormat.srtm) {
+        blockSize = Degrees(5.0)
+        store = SrtmBlockStore(
+            folder = options.dataDir!!,
+            metricsProvider = metricsProvider
+        )
+        blockMapper = SrtmBlockMapper(store.blockExtent, blockSize)
+        cacheSize = 25
+    } else {
+        blockSize = Degrees(1.0)
+        store = Aw3d30ElevationDataStore(
+            dataFolder = options.dataDir!!,
+            outputFolder = options.dataDir!!,
+            metricsProvider = metricsProvider
+        )
+        blockMapper = DegreeBlockMapper(store.blockExtent, blockSize)
+        cacheSize = 200L
+    }
+    val tileExtent = 256
+    return CachingElevationDataStore(
+        BlockElevationDataStore(
+            blockMapper = blockMapper,
+            tileExtent = tileExtent,
+            blockStore = CachingBlockStore(
+                cacheSize,
+                store,
+                metricsProvider
+            )
         )
     )
-)
+}
 
 private fun tileSinkToRepository(
     options: CliOptions,
-    tileExtent: Int,
-    dataStore: CachingElevationDataStore,
+    dataStore: ElevationDataStore,
     metricsProvider: SingletonMetricsProvider,
     repositoryFactory: (name: String, format: String) -> TileRepository
 ): Map<TileSink, TileRepository> {
+    val tileExtent = 256
     val sinks = mutableMapOf<TileSink, TileRepository>()
     if (options.terrarium) {
         val repository = repositoryFactory("terrarium", "png")
@@ -186,17 +205,6 @@ fun createMbTilesRepository(
         }
     }
 
-private fun validateData(options: CliOptions) {
-    log.info { "Validating data" }
-    val metricsProvider = SingletonMetricsProvider()
-    val blockStore = FilesystemBlockStore(
-        blockExtent = 6000,
-        folder = options.dataDir!!,
-        metricsProvider
-    )
-    blockStore.validateAll()
-    log.info { "Done data validation" }
-}
 
 private fun parseCommandLine(args: Array<String>): CliOptions {
     val options = CliOptions();

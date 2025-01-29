@@ -24,7 +24,7 @@ class VectorTileSink(
         }
         val contourOptions = contourOptionsProvider(tile)
         var linesByElevation = ContourLineGenerator(contourOptions, elevationDataStore).generate(tile.id)
-        if (linesByElevation.isEmpty()) {
+        if (linesByElevation.isEmpty() || linesByElevation.all { it.value.isEmpty() }) {
             return false
         }
         val epsilon = contourOptions.epsilon?.toDouble()

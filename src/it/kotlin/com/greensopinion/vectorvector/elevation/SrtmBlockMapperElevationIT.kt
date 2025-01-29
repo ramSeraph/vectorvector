@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.math.roundToInt
 
-class BlockMapperElevationIT {
-    private val mapper = com.greensopinion.vectorvector.elevation.BlockMapper(
+class SrtmBlockMapperElevationIT {
+    private val mapper = com.greensopinion.vectorvector.elevation.SrtmBlockMapper(
         blockExtent = 6000,
         blockSize = com.greensopinion.vectorvector.elevation.Degrees(5.0)
     )

@@ -7,8 +7,8 @@ import java.io.File
 
 private val metricsProvider = SingletonMetricsProvider()
 val testBlockStore = CachingBlockStore(
-    FilesystemBlockStore(
-        blockExtent = 6000,
+    25,
+    SrtmBlockStore(
         folder = File("data/tif"),
         metricsProvider
     ),

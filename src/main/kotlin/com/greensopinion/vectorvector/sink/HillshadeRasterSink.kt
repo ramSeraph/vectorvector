@@ -21,6 +21,7 @@ class HillshadeRasterSink(
 ) : TileSink {
     private val initialSize = 1024 * 150
 
+    @OptIn(ExperimentalStdlibApi::class)
     override fun accept(tile: Tile): Boolean {
         val hornAlgorithm = HornAlgorithm(
             elevationDataStore,
@@ -30,17 +31,23 @@ class HillshadeRasterSink(
         if (hillshade.empty) {
             return false
         }
+        var hasNonZero = false
         val image = BufferedImage(extent, extent, BufferedImage.TYPE_INT_ARGB)
         for (x in 0..<extent) {
             for (y in 0..<extent) {
                 val illumination = hillshade.get(x, y)
                 val v = illumination.meters.toInt() and 0xFF
-                val argb = if (excludedRange(illumination)) 0 else ((v and 0xFF) shl 24) or
+                val excluded = excludedRange(illumination)
+                val argb = if (excluded) 0 else ((v and 0xFF) shl 24) or
                         ((v and 0xFF) shl 16) or
                         ((v and 0xFF) shl 8) or
                         ((v and 0xFF) shl 0)
+                hasNonZero = hasNonZero || (!excluded && v > 0)
                 image.setRGB(x, y, argb)
             }
+        }
+        if (!hasNonZero) {
+            return false
         }
         val extension = "png"
         val output = ByteArrayOutputStream(initialSize)

@@ -24,8 +24,7 @@ class HornAlgorithmTest {
         assertThat(tile.extent).isEqualTo(256)
         (0..<tile.extent).forEach { x ->
             (0..<tile.extent).forEach { y ->
-                val expected = if (x == 0 || x == 255 || y == 0 || y == 255) 255.0 else 180.0
-                assertThat(tile.get(x, y).meters).isCloseTo(expected, Offset.offset(0.5))
+                assertThat(tile.get(x, y).meters).isCloseTo(180.0, Offset.offset(0.5))
             }
         }
     }

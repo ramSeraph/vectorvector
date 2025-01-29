@@ -25,6 +25,6 @@ class ElevationInterpolator(val tile: ElevationTile) {
         val eBottomLeft = ((1.0 - distanceX)*distanceY)*bottomLeftElevation.meters
         val eBottomRight = distanceX*distanceY*bottomRightElevation.meters
 
-        return Elevation(meters = eTopLeft+eTopRight+eBottomRight+eBottomLeft)
+        return Elevation(meters = eTopLeft + eTopRight + eBottomRight + eBottomLeft)
     }
 }

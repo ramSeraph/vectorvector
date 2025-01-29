@@ -9,9 +9,15 @@ class CliOptions {
     @Option(
         names = ["-d", "--data"],
         required = true,
-        description = ["The data directory containing elevation data in GeoTIFF format."]
+        description = ["The data directory containing elevation data in GeoTIFF format"]
     )
     var dataDir: File? = null
+
+    @Option(
+        names = ["--dataFormat"],
+        description = ["The format of data in the data directory"]
+    )
+    var dataFormat: DataSourceFormat = DataSourceFormat.aw3d30
 
     @Option(
         names = ["-o", "--output"],
@@ -19,12 +25,6 @@ class CliOptions {
         description = ["Specifies the directory where the generated output files will be saved. Defaults to \${DEFAULT-VALUE}"]
     )
     var outputDir: File = File(".")
-
-    @Option(
-        names = ["--validate"],
-        description = [" Validates the elevation data can be read before generating tiles. The command exits without generating output if validation fails. Defaults to \${DEFAULT-VALUE}"]
-    )
-    var validateData: Boolean = false
 
     @Option(
         names = ["--terrarium"],
@@ -103,6 +103,10 @@ class CliOptions {
     var contourEpsilon: Int = 3
 }
 
+enum class DataSourceFormat {
+    srtm, aw3d30
+}
+
 enum class CliOutputFormat {
     files,
     mbtiles
@@ -111,9 +115,12 @@ enum class CliOutputFormat {
 enum class NamedArea(val bounds: AreaBounds) {
     wholeworld(AreaBounds(minZ = 6, maxZ = 12, minX = 0, maxX = 63, minY = 0, maxY = 63)),
     world(AreaBounds(minZ = 6, maxZ = 12, minX = 0, maxX = 63, minY = 13, maxY = 43)),
-    northamerica(AreaBounds(minZ = 6, maxZ = 13, minX = 11, maxX = 23, minY = 5, maxY = 22)),
+    northamerica(AreaBounds(minZ = 6, maxZ = 12, minX = 0, maxX = 23, minY = 3, maxY = 26)),
     southamerica(AreaBounds(minZ = 6, maxZ = 12, minX = 17, maxX = 25, minY = 21, maxY = 43)),
+    centralamerica(AreaBounds(minZ = 6, maxZ = 12, minX = 15, maxX = 18, minY = 28, maxY = 30)),
     europe(AreaBounds(minZ = 6, maxZ = 12, minX = 23, maxX = 25, minY = 5, maxY = 15)),
+    newzealand(AreaBounds(minZ = 6, maxZ = 12, minX = 61, maxX = 63, minY = 38, maxY = 41)),
+    australia(AreaBounds(minZ = 6, maxZ = 12, minX = 52, maxX = 59, minY = 33, maxY = 40)),
     vancouver(AreaBounds(z = 6, x = 10, y = 21, maxZ = 12)),
     deepcove(AreaBounds(z = 11, x = 324, y = 700, maxZ = 12)),
     pnw(AreaBounds(minZ = 6, maxZ = 12, minX = 9, maxX = 10, minY = 21, maxY = 22)),
@@ -122,7 +129,8 @@ enum class NamedArea(val bounds: AreaBounds) {
     paris(AreaBounds(z = 6, x = 32, y = 22, maxZ = 12)),
     rome(AreaBounds(z = 6, x = 34, y = 23, maxZ = 12)),
     tokyo(AreaBounds(z = 6, x = 56, y = 25, maxZ = 12)),
-    palma(AreaBounds(z = 6, x = 32, y = 24, maxZ = 12))
+    mallorca(AreaBounds(z = 6, x = 32, y = 24, maxZ = 12)),
+    debug(AreaBounds(minZ = 9, maxZ = 9, minX = 494, maxX = 494, minY = 328, maxY = 328))
 }
 
 class AreaBounds(

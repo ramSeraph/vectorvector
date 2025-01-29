@@ -4,15 +4,15 @@ import com.greensopinion.vectorvector.Coordinates
 import kotlin.math.floor
 
 
-class BlockMapper(
+class SrtmBlockMapper(
     private val blockExtent: Int,
     private val blockSize: Degrees,
-) {
+) : BlockOffsetMapper {
     val pixelSize = Degrees(blockSize.degrees / blockExtent)
     private val xOffset = 1
     private val yOffset = 5
 
-    fun map(coordinates: Coordinates): BlockOffset {
+    override fun map(coordinates: Coordinates): BlockOffset {
         val block = BlockId(
             x = floor((coordinates.longitude + 180.0) / blockSize.degrees).toInt() + xOffset,
             y = floor((90.0 - coordinates.latitude) / blockSize.degrees).toInt() - yOffset
@@ -31,4 +31,19 @@ class BlockMapper(
         ).clamp(blockExtent.toDouble()-1)
         return BlockOffset(block, offset)
     }
+
+    /**
+     * maps a block ID to the bottom left coordinates of the corresponding area
+     */
+    override fun reverseMap(blockId: BlockId): Coordinates = Coordinates(
+        latitude = 90.0 - ((blockId.y + yOffset) * blockSize.degrees),
+        longitude = (blockId.x - xOffset) * blockSize.degrees - 180.0,
+    )
+
+    override fun mapArea(bottomLeft: Coordinates, topRight: Coordinates): List<BlockId> {
+        val degreeBlockMapper = DegreeBlockMapper(blockExtent, blockSize)
+        val degreeBlocks = degreeBlockMapper.mapArea(bottomLeft, topRight)
+        return degreeBlocks.map { degreeBlockMapper.reverseMap(it) }.map { map(it).blockId }.toList()
+    }
+
 }

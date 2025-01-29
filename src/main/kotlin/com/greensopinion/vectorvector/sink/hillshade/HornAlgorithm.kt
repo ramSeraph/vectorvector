@@ -38,7 +38,7 @@ class HornAlgorithm(
             override val extent = tile.extent
 
             override fun get(x: Int, y: Int): Elevation {
-                val slopeAspect = elevations.slopeAspect(resolution, x, y) ?: return Elevation(meters = 255.0)
+                val slopeAspect = elevations.slopeAspect(resolution, x, y)
                 val illumination = cos(zenithRad) * cos(slopeAspect.slope) +
                         sin(zenithRad) * sin(slopeAspect.slope) * cos(azimuthRad - slopeAspect.aspect)
                 return Elevation(meters = (255 * max(0.0, illumination)))
@@ -50,11 +50,13 @@ class HornAlgorithm(
 private class SlopeAspect(val slope: Radians, val aspect: Radians)
 
 
-private fun ElevationTile.slopeAspect(resolution: Double, x: Int, y: Int): SlopeAspect? {
-    val dzdx = derivativeX(resolution, x, y)
-    val dzdy = derivativeY(resolution, x, y)
+private fun ElevationTile.slopeAspect(resolution: Double, x: Int, y: Int): SlopeAspect {
+    var dzdx = derivativeX(resolution, x, y)
+    var dzdy = derivativeY(resolution, x, y)
     if (dzdx == Double.NEGATIVE_INFINITY || dzdy == Double.NEGATIVE_INFINITY) {
-        return null
+        // assume flat
+        dzdx = 0.0
+        dzdy = 0.0
     }
 
     val slope = atan(sqrt(dzdx * dzdx + dzdy * dzdy))

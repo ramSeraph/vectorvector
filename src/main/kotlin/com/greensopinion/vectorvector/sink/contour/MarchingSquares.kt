@@ -207,8 +207,10 @@ class MarchingSquares(
         val bounds = tile.elevationBounds
         val lower = (floor(bounds.min.meters).toInt() / interval) * interval
         val upper = (ceil(bounds.max.meters).toInt() / interval) * interval
-        return (lower..upper step interval).toList()
+        return (lower..upper step interval).filter { !isSeaLevel(it) }.toList()
     }
+
+    private fun isSeaLevel(it: Int) = it == 0
 
     private fun close(p1: DoublePoint, p2: DoublePoint): Boolean {
         val delta = 0.01

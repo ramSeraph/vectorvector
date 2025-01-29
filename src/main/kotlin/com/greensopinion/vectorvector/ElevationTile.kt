@@ -81,9 +81,9 @@ private class MaterializedTile(delegate: ElevationTile, private val buffer: Int)
     private val length = extent + 2*buffer
     private val data = DoubleArray(length * length)
 
+    private val lower = 0 - buffer
+    private val upper = extent + buffer
     init {
-        val lower = 0-buffer
-        val upper = extent+buffer
         for (x in lower..<upper) {
             for (y in lower..<upper) {
                 data[(x+buffer) + (y+buffer) * length] = delegate.get(x, y).meters
@@ -91,7 +91,12 @@ private class MaterializedTile(delegate: ElevationTile, private val buffer: Int)
         }
     }
 
-    override fun get(x: Int, y: Int): Elevation = Elevation(meters = data[(x+buffer) + (y+buffer) * length])
+    override fun get(x: Int, y: Int): Elevation {
+        if (x < lower || x >= upper || y < lower || y >= upper) {
+            return INVALID_ELEVATION
+        }
+        return Elevation(meters = data[(x + buffer) + (y + buffer) * length])
+    }
 
     override fun materialize(buffer: Int): ElevationTile = this
 }
