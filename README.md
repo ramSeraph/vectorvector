@@ -16,6 +16,8 @@ Provides a command-line tool for generating slippy map tiles from elevation data
 
 ### Elevation Inputs
 
+* ALOS AW3D30[^8] elevation data in GeoTIFF[^5] format. Tested using data
+  from [https://www.eorc.jaxa.jp](https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/aw3d30_e.htm)
 * SRTM[^4] elevation data in GeoTIFF[^5] format. Tested using data
   from [srtm.csi.cgiar.org](https://srtm.csi.cgiar.org/)
 
@@ -165,8 +167,8 @@ Running with `--help` will generate usage help:
 ```txt
 java -jar target/vectorvector-cli.jar  --help
 Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
-                                       [--validate] [--vector] [-a=<area>]
-                                       -d=<dataDir>
+                                       [--vector] [-a=<area>] -d=<dataDir>
+                                       [--dataFormat=<dataFormat>]
                                        [--epsilon=<contourEpsilon>]
                                        -f=<outputFormat> [-maxX=<maxX>]
                                        [-maxY=<maxY>] [-maxZ=<maxZ>]
@@ -176,11 +178,14 @@ Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
                                tile generation (minZ, maxZ, minX, maxX, minY,
                                maxY). If specified, the area supersedes all
                                Z/X/Y options. Must be one of wholeworld, world,
-                               northamerica, southamerica, europe, vancouver,
+                               northamerica, southamerica, centralamerica,
+                               europe, newzealand, australia, vancouver,
                                deepcove, pnw, sanfrancisco, newyork, paris,
-                               rome, tokyo, palma
+                               rome, tokyo, mallorca, debug
   -d, --data=<dataDir>       The data directory containing elevation data in
-                               GeoTIFF format.
+                               GeoTIFF format
+      --dataFormat=<dataFormat>
+                             The format of data in the data directory
       --epsilon=<contourEpsilon>
                              Specifies the epsilon value to apply to contour
                                lines for reducing the number of points using
@@ -218,10 +223,6 @@ Usage: java --jar vectorvector-cli.jar [-h] [--hillshadeRaster] [--terrarium]
       --terrarium            Generates Terrarium-style raster tiles, commonly
                                used for rendering 3D-like terrain features.
                                Defaults to false
-      --validate              Validates the elevation data can be read before
-                               generating tiles. The command exits without
-                               generating output if validation fails. Defaults
-                               to false
       --vector               Generates vector tiles with contour lines.
                                Defaults to true
 ```
@@ -246,19 +247,29 @@ $ pmtiles convert world-hillshade.mbtiles world-hillshade.pmtiles
 
 ## Benchmark
 
-Vector contour lines and raster hillshade for the world completed in 6 hours 51 minutes.
+Vector contour lines and raster hillshade for the world completed in 6 hours 51 minutes with SRTM source data, and about
+14 hours with AW3D30 source data.
 The process run on an Apple MacBook Pro with an M2 chip having 12 cores and 64 GB RAM.
 
-| file              | size    |
-|-------------------|---------|
-| hillshade.mbtiles | 15.5 GB |
-| vector.mbtiles    | 51.2 GB |
+| file              | SRTM size | AW3D30 size |
+|-------------------|-----------|-------------|
+| hillshade.mbtiles | 15.5 GB   | 28.1 GB     |
+| vector.mbtiles    | 51.2 GB   | 70.1 GB     |
 
 Command line options:
 
+AW3D30:
+
 ```txt
 -Xmx42g
---outputFormat mbtiles --data data/tif --output output --area world --epsilon 3 --vector=true --hillshadeRaster=true
+--outputFormat mbtiles --data data/alos --dataFormat=aw3d30 --output output --area world
+```
+
+SRTM:
+
+```txt
+-Xmx42g
+--outputFormat mbtiles --data data/tif --dataFormat=srtm --output output --area world
 ```
 
 Machine spec:
@@ -361,3 +372,7 @@ DOI: 10.1016/S0146-664X(72)80017-0
 [^7]: **Douglas, D., & Peucker, T. (1973)**. "Algorithms for the reduction of the number of points required to represent
 a digitized line or its caricature." The Canadian Cartographer, 10(2), 112–122.
 DOI: 10.3138/FM57-6770-U75U-7727
+
+[^8]: ALOS AW3D30 elevation data provided by the Japan Aerospace Exploration Agency (JAXA),
+available at 30-meter resolution. Source: JAXA Earth Observation Research
+Center. https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/aw3d30_e.htm
