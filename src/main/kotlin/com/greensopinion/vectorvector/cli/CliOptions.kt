@@ -104,7 +104,7 @@ class CliOptions {
 }
 
 enum class DataSourceFormat {
-    srtm, aw3d30
+    srtm, aw3d30, carto30
 }
 
 enum class CliOutputFormat {

@@ -4,6 +4,7 @@ import com.greensopinion.vectorvector.cli.CliOptions
 import com.greensopinion.vectorvector.cli.CliOutputFormat
 import com.greensopinion.vectorvector.cli.DataSourceFormat
 import com.greensopinion.vectorvector.elevation.Aw3d30ElevationDataStore
+import com.greensopinion.vectorvector.elevation.Carto30ElevationDataStore
 import com.greensopinion.vectorvector.elevation.BlockElevationDataStore
 import com.greensopinion.vectorvector.elevation.BlockOffsetMapper
 import com.greensopinion.vectorvector.elevation.BlockStore
@@ -101,11 +102,20 @@ private fun cachingElevationDataStore(
         )
         blockMapper = SrtmBlockMapper(store.blockExtent, blockSize)
         cacheSize = 25
-    } else {
+    } else if (options.dataFormat == DataSourceFormat.aw3d30) {
         blockSize = Degrees(1.0)
         store = Aw3d30ElevationDataStore(
             dataFolder = options.dataDir!!,
             outputFolder = options.dataDir!!,
+            metricsProvider = metricsProvider
+        )
+        blockMapper = DegreeBlockMapper(store.blockExtent, blockSize)
+        cacheSize = 200L
+    } else {
+        println("Using carto datastore")
+        blockSize = Degrees(1.0)
+        store = Carto30ElevationDataStore(
+            dataFolder = options.dataDir!!,
             metricsProvider = metricsProvider
         )
         blockMapper = DegreeBlockMapper(store.blockExtent, blockSize)
